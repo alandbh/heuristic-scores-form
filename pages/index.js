@@ -62,13 +62,13 @@ export default function Home() {
                     className="bg-blue-500 p-2 px-4 rounded font-bold my-6"
                     onClick={clickHandler}
                 >
-                    Teste
+                    Novo
                 </button>
             </div>
             <div>
                 <button
                     className="bg-indigo-500 p-2 px-4 rounded text-white font-bold"
-                    onClick={() => handlerChange("Casas Bahia")}
+                    onClick={() => handlerChange("Arezzo")}
                 >
                     Mudar
                 </button>
