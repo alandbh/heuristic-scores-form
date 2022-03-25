@@ -30,7 +30,9 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
                 </figure>
 
                 <button
-                    className={`text-blue-500 ${styles.toggle}`}
+                    className={`text-blue-500 ${styles.toggle} ${
+                        players.length < 1 ? "invisible" : ""
+                    }`}
                     disabled={players.length < 1}
                     onClick={handleToggle}
                 >
