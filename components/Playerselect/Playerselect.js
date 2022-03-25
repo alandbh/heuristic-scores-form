@@ -21,8 +21,10 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
                 <figure>
                     <img
                         src={`/logos/player-${
-                            activePlayer ? activePlayer.id : 1
-                        }.png`}
+                            activePlayer
+                                ? activePlayer.id + ".png"
+                                : "loading.gif"
+                        }`}
                         alt={activePlayer ? activePlayer.name : ""}
                     />
                 </figure>
