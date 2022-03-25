@@ -1,0 +1,67 @@
+// @import "../styles/globals.css";
+@import "../../styles/components.scss";
+
+.container {
+    width: max-content;
+    .wrapper {
+        display: flex;
+        align-items: center;
+    }
+    figure {
+        // border: 1px solid red;
+        display: flex;
+        width: 100px;
+        height: 100px;
+
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+    }
+
+    ul {
+        height: auto;
+        transition: 0.4s;
+        background: white;
+        // box-shadow: 0px 8px 10px #00000011;
+        @extend .box-shadow;
+        width: max-content;
+        padding: 1rem;
+        transform: translateY(-20px);
+
+        &.listopen {
+            opacity: 1;
+            height: auto;
+            display: block;
+        }
+        &.listclosed {
+            opacity: 0;
+            height: 0px;
+            display: none;
+        }
+        li {
+            border-bottom: 1px solid #dbdbdb;
+
+            button {
+                line-height: 2.4rem;
+                display: block;
+                width: 100%;
+                text-align: left;
+
+                &:hover {
+                    color: blue;
+                }
+            }
+        }
+    }
+
+    button.toggle {
+        // border: 1px solid red;
+        width: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+    }
+}

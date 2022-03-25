@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "../styles/Home.module.scss";
 import getData from "../services/getData";
 import { useEffect, useState } from "react";
-import PlayerSelect from "../components/Playerselect";
+import PlayerSelect from "../components/Playerselect/Playerselect";
 
 function evaluation() {
     const [players, setPlayers] = useState([]);

@@ -28,19 +28,12 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
                 </figure>
 
                 <button
-                    className="text-blue-500"
+                    className={`text-blue-500 ${styles.toggle}`}
                     disabled={players.length < 1}
                     onClick={handleToggle}
                 >
                     <ChevronDown />
-                    <span className={"sr-olny"}>Open</span>
-                </button>
-                <button
-                    type="button"
-                    class="text-blue-500  focus:ring-4 focus:outline-none focus:ring-[#24292F]/50 font-medium text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-gray-500  mr-2 mb-2"
-                >
-                    <ChevronDown />
-                    Sign in with Github
+                    <div className={styles.srolny}>Open</div>
                 </button>
             </div>
 
