@@ -1,0 +1,51 @@
+@import "../../styles/components.scss";
+.headerWrapper {
+    // border: 1px solid red;
+    height: 90px;
+    @extend .box-shadow;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-gap: 20px;
+
+    div.logo {
+        grid-column-start: 2;
+        grid-column-end: 3;
+        min-width: 130px;
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+    }
+
+    nav {
+        grid-column: 4/10;
+        display: flex;
+        // justify-content: center;
+        align-items: flex-end;
+        // border: 1px solid red;
+
+        a {
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 4px solid transparent;
+            margin: 0 0.5rem;
+            padding: 0.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+
+            &.active {
+                border-bottom: 4px solid $blue;
+            }
+        }
+    }
+
+    .colright {
+        grid-column: 10/12;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    span {
+        color: red;
+    }
+}
