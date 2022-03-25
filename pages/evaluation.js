@@ -11,8 +11,10 @@ function evaluation() {
     const [activePlayer, setActivePlayer] = useState(null);
 
     useEffect(async () => {
-        setPlayers(await getData());
+        setPlayers(await getData("players", "name"));
         // setActivePlayer(players[0]);
+
+        console.log(await getData("heuristics", "slug", "h_2_1"));
     }, []);
 
     useEffect(async () => {
