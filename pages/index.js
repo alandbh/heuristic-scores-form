@@ -1,6 +1,11 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.scss";
+import { arr_players, arr_heuristicas, arr_jornadas } from "./api/fake-data";
+
+// window.arr_heuristicas = arr_heuristicas;
+// window.arr_jornadas = arr_jornadas;
+// window.arr_players = arr_players;
 
 const player = {
     nome: "Arezzo",
@@ -27,16 +32,49 @@ const playerChange = {
     },
 };
 
-async function clickHandler() {
-    const response = await fetch("http://localhost:3000/api/postdata", {
-        method: "POST",
-        body: JSON.stringify(player),
-        headers: {
-            "Content-Type": "application/json",
-        },
+async function addPlayerHandler() {
+    arr_players.forEach(async (player) => {
+        const response = await fetch("http://localhost:3000/api/addPlayers", {
+            method: "POST",
+            body: JSON.stringify(player),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        console.log(data);
     });
-    const data = await response.json();
-    console.log(data);
+}
+
+async function addJourneyHandler() {
+    arr_jornadas.forEach(async (journey) => {
+        const response = await fetch("http://localhost:3000/api/addJourneys", {
+            method: "POST",
+            body: JSON.stringify(journey),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        console.log(data);
+    });
+}
+
+async function addHeuristicsHandler() {
+    arr_heuristicas.forEach(async (heuristic) => {
+        const response = await fetch(
+            "http://localhost:3000/api/addHeuristics",
+            {
+                method: "POST",
+                body: JSON.stringify(heuristic),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        const data = await response.json();
+        console.log(data);
+    });
 }
 
 async function handlerChange(query) {
@@ -59,15 +97,32 @@ export default function Home() {
         <div className={styles.container}>
             <div>
                 <button
-                    className="bg-blue-500 p-2 px-4 rounded font-bold my-6"
-                    onClick={clickHandler}
+                    className="bg-indigo-500 p-2 px-4 rounded text-white  font-bold my-6"
+                    onClick={addPlayerHandler}
                 >
-                    Novo
+                    Add Players
+                </button>
+            </div>
+
+            <div>
+                <button
+                    className="bg-indigo-500 p-2 px-4 rounded text-white font-bold my-6"
+                    onClick={() => addJourneyHandler()}
+                >
+                    Add Journeys
                 </button>
             </div>
             <div>
                 <button
-                    className="bg-indigo-500 p-2 px-4 rounded text-white font-bold"
+                    className="bg-indigo-500 p-2 px-4 rounded text-white font-bold my-6"
+                    onClick={() => addHeuristicsHandler()}
+                >
+                    Add Heuristics
+                </button>
+            </div>
+            <div>
+                <button
+                    className="bg-blue-500 p-2 px-4 rounded text-white font-bold  my-6"
                     onClick={() => handlerChange("Arezzo")}
                 >
                     Mudar
