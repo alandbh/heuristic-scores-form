@@ -4,18 +4,32 @@ import styles from "../styles/Home.module.scss";
 import getData from "../services/getData";
 import { useEffect, useState } from "react";
 import PlayerSelect from "../components/Playerselect/Playerselect";
+import JourneySelect from "../components/Journeyselect/Journeyselect";
 import Header from "../components/Header/Header";
+
+import React from "react";
+
+// import { Container } from './styles';
 
 function evaluation() {
     const [players, setPlayers] = useState([]);
     const [activePlayer, setActivePlayer] = useState(null);
 
+    const [journeys, setJourneys] = useState([]);
+    const [activeJourney, setActiveJourney] = useState(null);
+
     useEffect(async () => {
         setPlayers(await getData("players", "name"));
         // setActivePlayer(players[0]);
 
-        console.log(await getData("heuristics", "slug", "h_2_1"));
+        setJourneys(await getData("journeys"));
+
+        console.log(journeys);
     }, []);
+
+    useEffect(() => {
+        setActiveJourney(journeys[0]);
+    }, [journeys]);
 
     useEffect(async () => {
         const first = await players.filter((player) => {
@@ -36,6 +50,11 @@ function evaluation() {
             </Head>
 
             <Header className="active">
+                <JourneySelect
+                    setActiveJourney={setActiveJourney}
+                    activeJourney={activeJourney}
+                    journeys={journeys}
+                ></JourneySelect>
                 <PlayerSelect
                     setActivePlayer={setActivePlayer}
                     activePlayer={activePlayer}
@@ -47,8 +66,7 @@ function evaluation() {
                 <h1 className={styles.title}>
                     {activePlayer ? activePlayer.name : ""}
                 </h1>
-                <Link href="/dashboard">Dashboard</Link> <br />
-                <Link href="/">Home</Link>
+                <p>{activeJourney ? activeJourney.title : ""}</p>
             </main>
         </div>
     );

@@ -10,6 +10,8 @@ import styles from "./Header.module.scss";
 function Header({ children, className }) {
     const router = useRouter();
 
+    console.log(children);
+
     return (
         <header className={styles.headerWrapper}>
             <div className={styles.logo}>
@@ -45,8 +47,15 @@ function Header({ children, className }) {
                         Dashboard
                     </a>
                 </Link>
+                <>
+                    {children.find(
+                        (child) => child.type.name === "JourneySelect"
+                    )}
+                </>
             </nav>
-            <div className={styles.colright}>{children}</div>
+            <div className={styles.colright}>
+                {children.find((child) => child.type.name === "PlayerSelect")}
+            </div>
         </header>
     );
 }
