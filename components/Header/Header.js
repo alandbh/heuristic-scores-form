@@ -48,13 +48,17 @@ function Header({ children, className }) {
                     </a>
                 </Link>
                 <>
-                    {children.find(
-                        (child) => child.type.name === "JourneySelect"
-                    )}
+                    {children &&
+                        children.find(
+                            (child) => child.type.name === "JourneySelect"
+                        )}
                 </>
             </nav>
             <div className={styles.colright}>
-                {children.find((child) => child.type.name === "PlayerSelect")}
+                {children &&
+                    children.find(
+                        (child) => child.type.name === "PlayerSelect"
+                    )}
             </div>
         </header>
     );

@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { ChevronDown } from "react-feather";
 
 import styles from "./Playerselect.module.scss";
+import { useDetectOutsideClick } from "../../services/useDetectOutsideClick";
 
 function PlayerSelect({ activePlayer, setActivePlayer, players }) {
-    const [listOpen, setListOpen] = useState(false);
+    // const [listOpen, setListOpen] = useState(false);
+
+    const dropdownRef = useRef(null);
+    const [listOpen, setListOpen] = useDetectOutsideClick(dropdownRef, false);
 
     function handleToggle() {
         setListOpen(!listOpen);
@@ -41,7 +45,10 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
                 </button>
             </div>
 
-            <ul className={listOpen ? styles.listopen : styles.listclosed}>
+            <ul
+                ref={dropdownRef}
+                className={listOpen ? styles.listopen : styles.listclosed}
+            >
                 {players.length > 0 ? (
                     players.map((player) => (
                         <li

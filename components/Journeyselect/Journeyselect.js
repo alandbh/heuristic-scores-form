@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { ChevronDown } from "react-feather";
+import { useDetectOutsideClick } from "../../services/useDetectOutsideClick";
 
 import styles from "./Journeyselect.module.scss";
 
 function JourneySelect({ activeJourney, setActiveJourney, journeys }) {
-    const [listOpen, setListOpen] = useState(false);
+    // const [listOpen, setListOpen] = useState(false);
+
+    const dropdownRef = useRef(null);
+    const [listOpen, setListOpen] = useDetectOutsideClick(dropdownRef, false);
 
     function handleToggle() {
         setListOpen(!listOpen);
@@ -18,21 +22,26 @@ function JourneySelect({ activeJourney, setActiveJourney, journeys }) {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <span>{activeJourney ? activeJourney.title : ""}</span>
-
+                <label htmlFor="selectJourney">Select a journey:</label>
                 <button
+                    id="selectJourney"
                     className={`text-blue-500 ${styles.toggle} ${
                         journeys.length < 1 ? "invisible" : ""
                     }`}
                     disabled={journeys.length < 1}
                     onClick={handleToggle}
                 >
-                    <ChevronDown />
-                    <div className={styles.srolny}>Open</div>
+                    <span>{activeJourney ? activeJourney.title : ""}</span>
+                    <span>
+                        <ChevronDown />
+                    </span>
                 </button>
             </div>
 
-            <ul className={listOpen ? styles.listopen : styles.listclosed}>
+            <ul
+                ref={dropdownRef}
+                className={listOpen ? styles.listopen : styles.listclosed}
+            >
                 {journeys.length > 0 ? (
                     journeys.map((journey) => (
                         <li
