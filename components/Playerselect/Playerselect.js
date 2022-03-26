@@ -22,27 +22,33 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <figure>
-                    <img
-                        src={`/logos/player-${
-                            activePlayer
-                                ? activePlayer.id + ".png"
-                                : "loading.gif"
-                        }`}
-                        alt={activePlayer ? activePlayer.name : ""}
-                    />
-                </figure>
+                <label>Select a journey:</label>
 
-                <button
-                    className={`text-blue-500 ${styles.toggle} ${
-                        players.length < 1 ? "invisible" : ""
-                    }`}
-                    disabled={players.length < 1}
-                    onClick={handleToggle}
-                >
-                    <ChevronDown />
-                    <div className={styles.srolny}>Open</div>
-                </button>
+                <div className={styles.imageWrapper}>
+                    <figure>
+                        <img
+                            src={`/logos/player-${
+                                activePlayer
+                                    ? activePlayer.id + ".png"
+                                    : "loading.gif"
+                            }`}
+                            alt={activePlayer ? activePlayer.name : ""}
+                            role="button"
+                            onClick={handleToggle}
+                        />
+                    </figure>
+
+                    <button
+                        className={`text-blue-500 ${styles.toggle} ${
+                            players.length < 1 ? "invisible" : ""
+                        }`}
+                        disabled={players.length < 1}
+                        onClick={handleToggle}
+                    >
+                        <ChevronDown />
+                        <div className={styles.srolny}>Open</div>
+                    </button>
+                </div>
             </div>
 
             <ul

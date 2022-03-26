@@ -47,14 +47,13 @@ function Header({ children, className }) {
                         Dashboard
                     </a>
                 </Link>
-                <>
-                    {children &&
-                        children.find(
-                            (child) => child.type.name === "JourneySelect"
-                        )}
-                </>
             </nav>
             <div className={styles.colright}>
+                {children &&
+                    children.find(
+                        (child) => child.type.name === "JourneySelect"
+                    )}
+
                 {children &&
                     children.find(
                         (child) => child.type.name === "PlayerSelect"

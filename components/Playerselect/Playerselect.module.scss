@@ -3,15 +3,31 @@
 
 .container {
     width: max-content;
+    height: 70px;
+    margin-left: 2rem;
     .wrapper {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        label {
+            font-size: small;
+            color: $grey;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .imageWrapper {
+            display: flex;
+            justify-content: flex-start;
+        }
     }
     figure {
         // border: 1px solid red;
         display: flex;
         width: 100px;
-        height: 61px;
+        // height: 61px;
 
         img {
             max-width: 100%;
