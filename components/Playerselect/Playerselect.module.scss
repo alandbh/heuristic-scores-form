@@ -3,7 +3,7 @@
 
 .container {
     width: max-content;
-    height: 70px;
+    height: 65px;
     margin-left: 2rem;
     .wrapper {
         display: flex;
@@ -46,6 +46,7 @@
         width: max-content;
         min-width: 200px;
         padding: 1rem;
+        padding-bottom: 0.3rem;
         visibility: hidden;
         opacity: 0;
         transform: translateY(-20px);
@@ -59,6 +60,10 @@
 
         li {
             border-bottom: 1px solid #dbdbdb;
+
+            &:last-child {
+                border-bottom: none;
+            }
 
             button {
                 line-height: 2.4rem;

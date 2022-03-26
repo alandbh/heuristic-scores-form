@@ -45,4 +45,18 @@
         justify-content: flex-end;
         align-items: flex-end;
     }
+
+    @media (max-width: 900px) {
+        div.logo {
+            display: none;
+        }
+
+        nav {
+            grid-column: 2/6;
+        }
+
+        .colright {
+            grid-column: 6/12;
+        }
+    }
 }
