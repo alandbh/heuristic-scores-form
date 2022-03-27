@@ -20,6 +20,8 @@ function evaluation() {
     const [journeys, setJourneys] = useState([]);
     const [activeJourney, setActiveJourney] = useState(null);
 
+    const [allHeuristics, setAllHeuristics] = useState([]);
+
     // Fetching all Players from Database
     useEffect(async () => {
         setAllPlayers(await getData("players", "name"));
@@ -60,19 +62,33 @@ function evaluation() {
             // names must be equal
             return 0;
         });
-        console.log("FILTERED", sortedPlayers);
+        // console.log("FILTERED", sortedPlayers);
         setPlayers(sortedPlayers);
     }, [activeJourney]);
 
     useEffect(async () => {
-        // const first = await players.filter((player) => {
-        //     return player.id === 1;
-        // });
-
         setActivePlayer(players[0]);
-        // console.log(first[0]);
-        // console.log(await activePlayer);
     }, [players]);
+
+    /**
+     *
+     * HEURISTICS
+     */
+
+    //Fetching all HEURISTICS based on active JOURNEY
+
+    useEffect(async () => {
+        const heuristicsList = activeJourney
+            ? activeJourney.heuristics.join()
+            : "";
+        const filteredHeuristics = await getData(
+            "heuristics",
+            "slug",
+            heuristicsList
+        );
+        setAllHeuristics(filteredHeuristics);
+        // console.log(filteredHeuristics);
+    }, [activeJourney]);
 
     return (
         <div>
@@ -101,6 +117,8 @@ function evaluation() {
                 </h1>
 
                 <p>{activeJourney ? activeJourney.title : ""}</p>
+
+                {console.log(activeJourney)}
 
                 <pre style={{ maxWidth: 500, whiteSpace: "pre-line" }}>
                     {JSON.stringify(activeJourney)}
