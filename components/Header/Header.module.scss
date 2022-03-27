@@ -10,10 +10,15 @@
     div.logo {
         grid-column-start: 2;
         grid-column-end: 3;
-        min-width: 130px;
+        min-width: 80px;
+        max-width: 90px;
         display: flex;
         // justify-content: center;
         align-items: center;
+
+        img {
+            max-width: 100px;
+        }
     }
 
     nav {

@@ -3,6 +3,7 @@ import { ChevronDown } from "react-feather";
 
 import styles from "./Playerselect.module.scss";
 import { useDetectOutsideClick } from "../../services/useDetectOutsideClick";
+import Wave from "../Wave/Wave";
 
 function PlayerSelect({ activePlayer, setActivePlayer, players }) {
     // const [listOpen, setListOpen] = useState(false);
@@ -22,33 +23,43 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <label>Select a journey:</label>
+                {!activePlayer ? (
+                    <Wave
+                        ammount="7"
+                        height="40px"
+                        width="110px"
+                        color="#b7ccec"
+                        style={{ marginTop: 10 }}
+                    />
+                ) : (
+                    <>
+                        <label>Select a journey:</label>
 
-                <div className={styles.imageWrapper}>
-                    <figure>
-                        <img
-                            src={`/logos/player-${
-                                activePlayer
-                                    ? activePlayer.id + ".png"
-                                    : "loading.gif"
-                            }`}
-                            alt={activePlayer ? activePlayer.name : ""}
-                            role="button"
-                            onClick={handleToggle}
-                        />
-                    </figure>
+                        <div className={styles.imageWrapper}>
+                            <figure>
+                                <img
+                                    src={`/logos/player-${
+                                        activePlayer.id + ".png"
+                                    }`}
+                                    alt={activePlayer ? activePlayer.name : ""}
+                                    role="button"
+                                    onClick={handleToggle}
+                                />
+                            </figure>
 
-                    <button
-                        className={`text-blue-500 ${styles.toggle} ${
-                            players.length < 1 ? "invisible" : ""
-                        }`}
-                        disabled={players.length < 1}
-                        onClick={handleToggle}
-                    >
-                        <ChevronDown />
-                        <div className={styles.srolny}>Open</div>
-                    </button>
-                </div>
+                            <button
+                                className={`text-blue-500 ${styles.toggle} ${
+                                    players.length < 1 ? "invisible" : ""
+                                }`}
+                                disabled={players.length < 1}
+                                onClick={handleToggle}
+                            >
+                                <ChevronDown />
+                                <div className={styles.srolny}>Open</div>
+                            </button>
+                        </div>
+                    </>
+                )}
             </div>
 
             <ul
