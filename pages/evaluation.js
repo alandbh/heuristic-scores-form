@@ -8,35 +8,68 @@ import JourneySelect from "../components/Journeyselect/Journeyselect";
 import Header from "../components/Header/Header";
 
 import React from "react";
+import Loader from "../components/Wave/Wave";
 
 // import { Container } from './styles';
 
 function evaluation() {
     const [players, setPlayers] = useState([]);
+    const [allPlayers, setAllPlayers] = useState([]);
     const [activePlayer, setActivePlayer] = useState(null);
 
     const [journeys, setJourneys] = useState([]);
     const [activeJourney, setActiveJourney] = useState(null);
 
+    // Fetching all Players from Database
     useEffect(async () => {
-        setPlayers(await getData("players", "name"));
-        // setActivePlayer(players[0]);
-
-        setJourneys(await getData("journeys"));
-
-        console.log(journeys);
+        setAllPlayers(await getData("players", "name"));
+        // console.log(await getData("players", "name"));
     }, []);
 
+    //Fetching all Journeys
+    useEffect(async () => {
+        setJourneys(await getData("journeys"));
+    }, [allPlayers]);
+
+    // Selecting the FIRST JOURNEY
     useEffect(() => {
         setActiveJourney(journeys[0]);
     }, [journeys]);
 
-    useEffect(async () => {
-        const first = await players.filter((player) => {
-            return player.id === 1;
-        });
+    // Filtering Players from JOURNEY
 
-        setActivePlayer(first[0]);
+    useEffect(() => {
+        const playersFromJourney =
+            activeJourney && allPlayers.length > 0
+                ? activeJourney.players.map((id) => {
+                      return allPlayers.filter((player) => player.id === id)[0];
+                  })
+                : [];
+
+        // sort by name
+        const sortedPlayers = playersFromJourney.sort(function (a, b) {
+            const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+            const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+
+            // names must be equal
+            return 0;
+        });
+        console.log("FILTERED", sortedPlayers);
+        setPlayers(sortedPlayers);
+    }, [activeJourney]);
+
+    useEffect(async () => {
+        // const first = await players.filter((player) => {
+        //     return player.id === 1;
+        // });
+
+        setActivePlayer(players[0]);
         // console.log(first[0]);
         // console.log(await activePlayer);
     }, [players]);
@@ -66,7 +99,12 @@ function evaluation() {
                 <h1 className={styles.title}>
                     {activePlayer ? activePlayer.name : ""}
                 </h1>
+
                 <p>{activeJourney ? activeJourney.title : ""}</p>
+
+                <pre style={{ maxWidth: 500, whiteSpace: "pre-line" }}>
+                    {JSON.stringify(activeJourney)}
+                </pre>
             </main>
         </div>
     );
