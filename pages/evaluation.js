@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.scss";
 import getData from "../services/getData";
@@ -6,6 +7,7 @@ import { useEffect, useState } from "react";
 import PlayerSelect from "../components/Playerselect/Playerselect";
 import JourneySelect from "../components/Journeyselect/Journeyselect";
 import Header from "../components/Header/Header";
+import HeuristicNode from "../components/HeuristicNode/HeuristicNode";
 
 import React from "react";
 import Loader from "../components/Wave/Wave";
@@ -81,13 +83,18 @@ function evaluation() {
         const heuristicsList = activeJourney
             ? activeJourney.heuristics.join()
             : "";
-        const filteredHeuristics = await getData(
-            "heuristics",
-            "slug",
-            heuristicsList
-        );
+        const filteredHeuristics = activeJourney
+            ? await getData("heuristics", "slug", heuristicsList)
+            : [];
         setAllHeuristics(filteredHeuristics);
+        // debugger;
         // console.log(filteredHeuristics);
+
+        const allGroups = filteredHeuristics.map(
+            (heuristic) => heuristic.group
+        );
+        const uniqueGroups = [...new Set(allGroups)];
+        console.log(uniqueGroups);
     }, [activeJourney]);
 
     return (
@@ -117,6 +124,30 @@ function evaluation() {
                 </h1>
 
                 <p>{activeJourney ? activeJourney.title : ""}</p>
+
+                <div>
+                    <section>
+                        <div className="sectionHeader">
+                            <h1>1 Need Recognition</h1>
+                            <div className="sectionScore">
+                                <span>25 of 30</span>
+                                <img src="/minichart.png" />
+                            </div>
+                        </div>
+
+                        <div className="sectionContainer">
+                            <div className="heuristicWrapper">
+                                <HeuristicNode
+                                    number={222}
+                                    title={"Is the navigation obvious bla bla"}
+                                    description={
+                                        "Customer should be able to move easily through the different sections."
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </section>
+                </div>
 
                 {console.log(activeJourney)}
 
