@@ -10,7 +10,7 @@ import styles from "./Header.module.scss";
 function Header({ children, className }) {
     const router = useRouter();
 
-    console.log(children);
+    // console.log(children);
 
     return (
         <header className={styles.headerWrapper}>

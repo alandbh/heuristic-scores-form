@@ -14,7 +14,7 @@ async function getData(whatToFetch = "players", orderBy = "_id", find = "") {
     );
     const data = await response.json();
 
-    console.log(data);
+    // console.log(data);
 
     return data;
 }
