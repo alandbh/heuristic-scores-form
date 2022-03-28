@@ -35,23 +35,24 @@ function evaluation() {
      * @param {number} hscoreValue
      * @param {string} note
      */
+
+    const updatedActivePlayer = { ...activePlayer };
+
     function setHeuristicScore(hSlug, hscoreValue, note) {
         setHeuScore(hscoreValue);
 
         if (activePlayer && activeJourney) {
-            const updatedActivePlayer = { ...activePlayer };
-            updatedActivePlayer.scores[activeJourney.slug] = {
-                [hSlug]: {
-                    score: hscoreValue,
-                    note,
-                },
+            updatedActivePlayer.scores[activeJourney.slug] = {};
+            updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
+                score: hscoreValue,
+                note,
             };
 
-            setActivePlayer(updatedActivePlayer);
+            //setActivePlayer(updatedActivePlayer);
             // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
             // activePlayer.scores[activeJourney.slug][slug].none = note;
             // activePlayer.scores[activeJourney.slug] = "alannnn";
-            console.log("SCORE", activePlayer);
+            console.log("SCORE", updatedActivePlayer);
         }
     }
 
@@ -129,6 +130,13 @@ function evaluation() {
         console.log(groups);
     }, [allHeuristics]);
 
+    function getHeuristicsByGroup(group) {
+        const heuristicsByGroup = allHeuristics.filter(
+            (heuristic) => heuristic.group === group
+        );
+        return heuristicsByGroup;
+    }
+
     return (
         <div>
             <Head>
@@ -151,48 +159,73 @@ function evaluation() {
             </Header>
 
             <main>
+                <div>
+                    <section>
+                        {groups.length > 0
+                            ? groups.map((group, index) => (
+                                  <div key={index}>
+                                      <div className="sectionHeader">
+                                          <h1>{`${index + 1}. ${group}`}</h1>
+                                          <div className="sectionScore">
+                                              <span>25 of 30</span>
+                                              <img src="/minichart.png" />
+                                          </div>
+                                      </div>
+
+                                      {getHeuristicsByGroup(group, index).map(
+                                          (heuristic) => (
+                                              <div
+                                                  key={heuristic.slug}
+                                                  className="sectionContainer"
+                                              >
+                                                  <div className="heuristicWrapper">
+                                                      <HeuristicNode
+                                                          slug={heuristic.slug}
+                                                          setScore={(
+                                                              slug,
+                                                              score,
+                                                              note
+                                                          ) =>
+                                                              setHeuristicScore(
+                                                                  slug,
+                                                                  score,
+                                                                  note
+                                                              )
+                                                          }
+                                                          // setNote={(note)=>setNoteText()}
+                                                          title={
+                                                              heuristic.title
+                                                          }
+                                                          description={
+                                                              heuristic.description
+                                                          }
+                                                      />
+                                                  </div>
+                                              </div>
+                                          )
+                                      )}
+                                  </div>
+                              ))
+                            : "nnnnnnnnn"}
+                    </section>
+                </div>
+
+                <pre style={{ maxWidth: 500, whiteSpace: "pre-line" }}>
+                    {updatedActivePlayer &&
+                    updatedActivePlayer.scores &&
+                    activeJourney
+                        ? JSON.stringify(
+                              updatedActivePlayer.scores[activeJourney.slug]
+                          )
+                        : ""}
+                </pre>
+
                 <h1 className={styles.title}>
                     {activePlayer ? activePlayer.name : ""}
                 </h1>
 
                 <p>{activeJourney ? activeJourney.title : ""}</p>
                 <p>O SCORE É: {hscore ? hscore.h_1_1 : ""}</p>
-
-                <div>
-                    <section>
-                        aaaaaa
-                        {groups.length > 0
-                            ? groups.map((group, index) => (
-                                  <div key={index} className="sectionHeader">
-                                      <h1>{`${index}. ${group}`}</h1>
-                                      <div className="sectionScore">
-                                          <span>25 of 30</span>
-                                          <img src="/minichart.png" />
-                                      </div>
-                                  </div>
-                              ))
-                            : "nnnnnnnnn"}
-                        <div className="sectionContainer">
-                            <div className="heuristicWrapper">
-                                <HeuristicNode
-                                    slug="h_1_1"
-                                    setScore={(slug, score, note) =>
-                                        setHeuristicScore(slug, score, note)
-                                    }
-                                    // setNote={(note)=>setNoteText()}
-                                    title={"Is the navigation obvious bla bla"}
-                                    description={
-                                        "Customer should be able to move easily through the different sections."
-                                    }
-                                />
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <pre style={{ maxWidth: 500, whiteSpace: "pre-line" }}>
-                    {JSON.stringify(activeJourney)}
-                </pre>
             </main>
         </div>
     );
