@@ -29,8 +29,8 @@ function HeuristicNode({
     }
 
     useEffect(() => {
-        heuristicScore[slug] = rangeValue;
-        setScore(heuristicScore);
+        // heuristicScore[slug] = rangeValue;
+        setScore(rangeValue);
     }, [rangeValue]);
 
     return (
@@ -52,16 +52,6 @@ function HeuristicNode({
                             }
                         />
                     ) : (
-                        // <Range
-                        //     type="range"
-                        //     min="1"
-                        //     max="5"
-                        //     id={slug}
-                        //     value={rangeValue}
-                        //     onChange={(ev) =>
-                        //         setHeuristicScore(ev.target.value)
-                        //     }
-                        // />
                         <select>
                             <option>TBD</option>
                         </select>

@@ -26,9 +26,21 @@ function evaluation() {
 
     const [hscore, setHeuScore] = useState(null);
 
-    function setHeuristicScore(hscoreValue) {
+    function setHeuristicScore(hSlug, hscoreValue, note) {
         setHeuScore(hscoreValue);
-        console.log(hscoreValue);
+
+        if (activePlayer && activeJourney) {
+            activePlayer.scores[activeJourney.slug] = {
+                [hSlug]: {
+                    score: hscoreValue,
+                    note,
+                },
+            };
+            // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
+            // activePlayer.scores[activeJourney.slug][slug].none = note;
+            // activePlayer.scores[activeJourney.slug] = "alannnn";
+            console.log("SCORE", activePlayer);
+        }
     }
 
     // Fetching all Players from Database
@@ -148,7 +160,11 @@ function evaluation() {
                                 <HeuristicNode
                                     slug="h_1_1"
                                     setScore={(score) =>
-                                        setHeuristicScore(score)
+                                        setHeuristicScore(
+                                            "h_1_1",
+                                            score,
+                                            "uma nota"
+                                        )
                                     }
                                     title={"Is the navigation obvious bla bla"}
                                     description={
