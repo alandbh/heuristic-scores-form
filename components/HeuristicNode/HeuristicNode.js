@@ -18,6 +18,7 @@ function HeuristicNode({
     description,
     type = "scale",
     setScore,
+    setNote,
     choice,
 }) {
     const [rangeValue, setRangeValue] = useState("2");
@@ -28,10 +29,23 @@ function HeuristicNode({
         setRangeValue(value);
     }
 
+    /**
+     *
+     * Capturing Notes
+     */
+
+    const [noteText, setNoteText] = useState(null);
+
     useEffect(() => {
+        console.log(noteText);
         // heuristicScore[slug] = rangeValue;
-        setScore(rangeValue);
-    }, [rangeValue]);
+        setScore(slug, rangeValue, noteText);
+    }, [rangeValue, noteText]);
+
+    // useEffect(() => {
+    //     // heuristicScore[slug] = rangeValue;
+    //     setNote(noteText);
+    // }, [noteText]);
 
     return (
         <div className="heuristicWrapper">
@@ -65,6 +79,12 @@ function HeuristicNode({
                     <Image src="/icon-addnote.svg" width="20" height="22" /> Add
                     Note
                 </button>
+
+                <div className="noteContainer">
+                    <textarea
+                        onKeyDown={(ev) => setNoteText(ev.target.value)}
+                    ></textarea>
+                </div>
             </div>
         </div>
     );

@@ -39,7 +39,7 @@ function evaluation() {
             // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
             // activePlayer.scores[activeJourney.slug][slug].none = note;
             // activePlayer.scores[activeJourney.slug] = "alannnn";
-            console.log("SCORE", activePlayer);
+            console.log("SCORE", { hSlug, hscoreValue, note });
         }
     }
 
@@ -159,13 +159,10 @@ function evaluation() {
                             <div className="heuristicWrapper">
                                 <HeuristicNode
                                     slug="h_1_1"
-                                    setScore={(score) =>
-                                        setHeuristicScore(
-                                            "h_1_1",
-                                            score,
-                                            "uma nota"
-                                        )
+                                    setScore={(slug, score, note) =>
+                                        setHeuristicScore(slug, score, note)
                                     }
+                                    // setNote={(note)=>setNoteText()}
                                     title={"Is the navigation obvious bla bla"}
                                     description={
                                         "Customer should be able to move easily through the different sections."
