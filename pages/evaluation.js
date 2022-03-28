@@ -23,23 +23,35 @@ function evaluation() {
     const [activeJourney, setActiveJourney] = useState(null);
 
     const [allHeuristics, setAllHeuristics] = useState([]);
+    const [groups, setGroups] = useState([]);
 
     const [hscore, setHeuScore] = useState(null);
 
+    /**
+     *
+     * UPDATING THE ACTIVE PLAYER'S SCORE
+     *
+     * @param {string} hSlug
+     * @param {number} hscoreValue
+     * @param {string} note
+     */
     function setHeuristicScore(hSlug, hscoreValue, note) {
         setHeuScore(hscoreValue);
 
         if (activePlayer && activeJourney) {
-            activePlayer.scores[activeJourney.slug] = {
+            const updatedActivePlayer = { ...activePlayer };
+            updatedActivePlayer.scores[activeJourney.slug] = {
                 [hSlug]: {
                     score: hscoreValue,
                     note,
                 },
             };
+
+            setActivePlayer(updatedActivePlayer);
             // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
             // activePlayer.scores[activeJourney.slug][slug].none = note;
             // activePlayer.scores[activeJourney.slug] = "alannnn";
-            console.log("SCORE", { hSlug, hscoreValue, note });
+            console.log("SCORE", activePlayer);
         }
     }
 
@@ -108,13 +120,14 @@ function evaluation() {
         setAllHeuristics(filteredHeuristics);
         // debugger;
         // console.log(filteredHeuristics);
-
-        const allGroups = filteredHeuristics.map(
-            (heuristic) => heuristic.group
-        );
-        const uniqueGroups = [...new Set(allGroups)];
-        console.log(uniqueGroups);
     }, [activeJourney]);
+
+    useEffect(() => {
+        const allGroups = allHeuristics.map((heuristic) => heuristic.group);
+        const uniqueGroups = [...new Set(allGroups)];
+        setGroups(uniqueGroups);
+        console.log(groups);
+    }, [allHeuristics]);
 
     return (
         <div>
@@ -147,14 +160,17 @@ function evaluation() {
 
                 <div>
                     <section>
-                        <div className="sectionHeader">
-                            <h1>1 Need Recognition</h1>
-                            <div className="sectionScore">
-                                <span>25 of 30</span>
-                                <img src="/minichart.png" />
-                            </div>
-                        </div>
-
+                        aaaaaa
+                        {groups.length > 0 ??
+                            groups.map((group, index) => (
+                                <div key={index} className="sectionHeader">
+                                    <h1>{`${index}. ${group}`}</h1>
+                                    <div className="sectionScore">
+                                        <span>25 of 30</span>
+                                        <img src="/minichart.png" />
+                                    </div>
+                                </div>
+                            ))}
                         <div className="sectionContainer">
                             <div className="heuristicWrapper">
                                 <HeuristicNode
