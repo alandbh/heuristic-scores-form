@@ -24,6 +24,13 @@ function evaluation() {
 
     const [allHeuristics, setAllHeuristics] = useState([]);
 
+    const [hscore, setHeuScore] = useState(null);
+
+    function setHeuristicScore(hscoreValue) {
+        setHeuScore(hscoreValue);
+        console.log(hscoreValue);
+    }
+
     // Fetching all Players from Database
     useEffect(async () => {
         setAllPlayers(await getData("players", "name"));
@@ -124,6 +131,7 @@ function evaluation() {
                 </h1>
 
                 <p>{activeJourney ? activeJourney.title : ""}</p>
+                <p>O SCORE É: {hscore ? hscore.h_1_1 : ""}</p>
 
                 <div>
                     <section>
@@ -138,7 +146,10 @@ function evaluation() {
                         <div className="sectionContainer">
                             <div className="heuristicWrapper">
                                 <HeuristicNode
-                                    number={222}
+                                    slug="h_1_1"
+                                    setScore={(score) =>
+                                        setHeuristicScore(score)
+                                    }
                                     title={"Is the navigation obvious bla bla"}
                                     description={
                                         "Customer should be able to move easily through the different sections."
@@ -148,8 +159,6 @@ function evaluation() {
                         </div>
                     </section>
                 </div>
-
-                {console.log(activeJourney)}
 
                 <pre style={{ maxWidth: 500, whiteSpace: "pre-line" }}>
                     {JSON.stringify(activeJourney)}

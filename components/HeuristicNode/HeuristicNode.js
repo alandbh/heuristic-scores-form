@@ -1,25 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Range from "../Range";
 
 // import { Container } from './styles';
 
-function HeuristicNode({ number, title, description, type = "scale", choice }) {
+const textScores = {
+    1: "1 - Strongly Disagree",
+    2: "2 - Disagree",
+    3: "3 - Neutral",
+    4: "4 - Agree",
+    5: "5 - Strongly Agree",
+};
+
+function HeuristicNode({
+    slug,
+    title,
+    description,
+    type = "scale",
+    setScore,
+    choice,
+}) {
+    const [rangeValue, setRangeValue] = useState("2");
+
+    const heuristicScore = {};
+
+    function setHeuristicScore(value) {
+        setRangeValue(value);
+    }
+
+    useEffect(() => {
+        heuristicScore[slug] = rangeValue;
+        setScore(heuristicScore);
+    }, [rangeValue]);
+
     return (
         <div className="heuristicWrapper">
-            <span className="number">{number}</span>
+            <span className="number">{slug}</span>
             <div className="heuristicContainer">
                 <h2>{title}</h2>
                 <p>{description}</p>
 
                 <div className="sliderWrapper">
                     {type === "scale" ? (
-                        <input type={"range"} min={1} max={50} />
+                        <Range
+                            type={"range"}
+                            min={1}
+                            max={5}
+                            value={rangeValue}
+                            onChange={(ev) =>
+                                setHeuristicScore(ev.target.value)
+                            }
+                        />
                     ) : (
+                        // <Range
+                        //     type="range"
+                        //     min="1"
+                        //     max="5"
+                        //     id={slug}
+                        //     value={rangeValue}
+                        //     onChange={(ev) =>
+                        //         setHeuristicScore(ev.target.value)
+                        //     }
+                        // />
                         <select>
                             <option>TBD</option>
                         </select>
                     )}
-                    <span className="sliderValue">4 - Agree</span>
+                    <span className="sliderValue">
+                        {textScores[rangeValue]}
+                    </span>
                 </div>
 
                 <button>
