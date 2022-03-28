@@ -27,6 +27,10 @@ function evaluation() {
 
     const [hscore, setHeuScore] = useState(null);
 
+    function objIsEmpty(obj) {
+        return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
+
     /**
      *
      * UPDATING THE ACTIVE PLAYER'S SCORE
@@ -42,13 +46,26 @@ function evaluation() {
         setHeuScore(hscoreValue);
 
         if (activePlayer && activeJourney) {
-            updatedActivePlayer.scores[activeJourney.slug] = {};
-            updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
-                score: hscoreValue,
-                note,
-            };
+            let journeyScores = updatedActivePlayer.scores[activeJourney.slug];
 
-            //setActivePlayer(updatedActivePlayer);
+            // check if it's empty
+
+            if (objIsEmpty(updatedActivePlayer.scores)) {
+                updatedActivePlayer.scores[activeJourney.slug] = {};
+                updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
+                    score: hscoreValue,
+                    note,
+                };
+            } else if (
+                !objIsEmpty(updatedActivePlayer.scores[activeJourney.slug])
+            ) {
+                updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
+                    score: hscoreValue,
+                    note,
+                };
+            }
+
+            setActivePlayer(updatedActivePlayer);
             // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
             // activePlayer.scores[activeJourney.slug][slug].none = note;
             // activePlayer.scores[activeJourney.slug] = "alannnn";
