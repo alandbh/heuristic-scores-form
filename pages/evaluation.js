@@ -161,16 +161,17 @@ function evaluation() {
                 <div>
                     <section>
                         aaaaaa
-                        {groups.length > 0 ??
-                            groups.map((group, index) => (
-                                <div key={index} className="sectionHeader">
-                                    <h1>{`${index}. ${group}`}</h1>
-                                    <div className="sectionScore">
-                                        <span>25 of 30</span>
-                                        <img src="/minichart.png" />
-                                    </div>
-                                </div>
-                            ))}
+                        {groups.length > 0
+                            ? groups.map((group, index) => (
+                                  <div key={index} className="sectionHeader">
+                                      <h1>{`${index}. ${group}`}</h1>
+                                      <div className="sectionScore">
+                                          <span>25 of 30</span>
+                                          <img src="/minichart.png" />
+                                      </div>
+                                  </div>
+                              ))
+                            : "nnnnnnnnn"}
                         <div className="sectionContainer">
                             <div className="heuristicWrapper">
                                 <HeuristicNode

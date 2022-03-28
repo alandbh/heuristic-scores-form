@@ -37,7 +37,7 @@ function HeuristicNode({
     const [noteText, setNoteText] = useState(null);
 
     useEffect(() => {
-        console.log(noteText);
+        // console.log("TEXTOO", noteText);
         // heuristicScore[slug] = rangeValue;
         setScore(slug, rangeValue, noteText);
     }, [rangeValue, noteText]);
@@ -82,7 +82,7 @@ function HeuristicNode({
 
                 <div className="noteContainer">
                     <textarea
-                        onKeyDown={(ev) => setNoteText(ev.target.value)}
+                        onChange={(ev) => setNoteText(ev.target.value)}
                     ></textarea>
                 </div>
             </div>
