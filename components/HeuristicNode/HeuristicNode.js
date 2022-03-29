@@ -18,6 +18,7 @@ function HeuristicNode({
     description,
     type = "scale",
     setScore,
+    currentScore,
     setNote,
     choice,
 }) {
@@ -28,6 +29,12 @@ function HeuristicNode({
     function setHeuristicScore(value) {
         setRangeValue(value);
     }
+
+    // Getting Current Score from DB
+
+    useEffect(() => {
+        setRangeValue(currentScore ? currentScore.score : 1);
+    }, []);
 
     /**
      *
