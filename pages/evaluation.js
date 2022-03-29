@@ -28,7 +28,9 @@ function evaluation() {
     const [hscore, setHeuScore] = useState(null);
 
     function objIsEmpty(obj) {
-        return Object.keys(obj).length === 0 && obj.constructor === Object;
+        return obj && obj.constructor === Object
+            ? Object.keys(obj).length === 0
+            : null;
     }
 
     /**
@@ -43,33 +45,42 @@ function evaluation() {
     const updatedActivePlayer = { ...activePlayer };
 
     function setHeuristicScore(hSlug, hscoreValue, note) {
-        setHeuScore(hscoreValue);
+        if (hSlug && hscoreValue) {
+            setHeuScore(hscoreValue);
 
-        if (activePlayer && activeJourney) {
-            let journeyScores = updatedActivePlayer.scores[activeJourney.slug];
+            if (activePlayer && activeJourney) {
+                let journeyScores =
+                    updatedActivePlayer.scores[activeJourney.slug];
 
-            // check if it's empty
+                // check if it's empty
 
-            if (objIsEmpty(updatedActivePlayer.scores)) {
-                updatedActivePlayer.scores[activeJourney.slug] = {};
-                updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
-                    score: hscoreValue,
-                    note,
-                };
-            } else if (
-                !objIsEmpty(updatedActivePlayer.scores[activeJourney.slug])
-            ) {
-                updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
-                    score: hscoreValue,
-                    note,
-                };
+                if (objIsEmpty(updatedActivePlayer.scores)) {
+                    updatedActivePlayer.scores[activeJourney.slug] = {};
+                    updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
+                        score: hscoreValue,
+                        note,
+                    };
+                } else if (!updatedActivePlayer.scores[activeJourney.slug]) {
+                    let objHSlug = {};
+
+                    objHSlug[hSlug] = {
+                        score: hscoreValue,
+                        note,
+                    };
+                    updatedActivePlayer.scores[activeJourney.slug] = objHSlug;
+                } else {
+                    updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
+                        score: hscoreValue,
+                        note,
+                    };
+                }
+
+                setActivePlayer(updatedActivePlayer);
+                // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
+                // activePlayer.scores[activeJourney.slug][slug].none = note;
+                // activePlayer.scores[activeJourney.slug] = "alannnn";
+                console.log("SCORE", updatedActivePlayer);
             }
-
-            setActivePlayer(updatedActivePlayer);
-            // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
-            // activePlayer.scores[activeJourney.slug][slug].none = note;
-            // activePlayer.scores[activeJourney.slug] = "alannnn";
-            console.log("SCORE", updatedActivePlayer);
         }
     }
 
@@ -82,12 +93,13 @@ function evaluation() {
     //Fetching all Journeys
     useEffect(async () => {
         setJourneys(await getData("journeys"));
-    }, [allPlayers]);
+        setActiveJourney(journeys[1]);
+    }, []);
 
     // Selecting the FIRST JOURNEY
-    useEffect(() => {
-        setActiveJourney(journeys[0]);
-    }, [journeys]);
+    // useEffect(() => {
+    //     setActiveJourney(journeys[1]);
+    // }, []);
 
     // Filtering Players from JOURNEY
 
@@ -135,6 +147,7 @@ function evaluation() {
         const filteredHeuristics = activeJourney
             ? await getData("heuristics", "slug", heuristicsList)
             : [];
+        // setAllHeuristics([]);
         setAllHeuristics(filteredHeuristics);
         // debugger;
         // console.log(filteredHeuristics);
@@ -152,6 +165,31 @@ function evaluation() {
             (heuristic) => heuristic.group === group
         );
         return heuristicsByGroup;
+    }
+
+    function getCurrentScore(heuSlug) {
+        if (activePlayer && activeJourney && heuSlug) {
+            if (objIsEmpty(activePlayer.scores)) {
+                console.log("vaziooo");
+                return { score: 0, note: "" };
+            } else if (!activePlayer.scores[activeJourney.slug]) {
+                console.log("ACT SCORES", activePlayer.scores);
+                console.log("ACT JOUR", activeJourney.slug);
+                // activePlayer.scores[activeJourney.slug] = {};
+                return { score: 0, note: "" };
+            } else {
+                return activePlayer.scores[activeJourney.slug][heuSlug];
+            }
+        }
+    }
+    function getCurrentNote(heuSlug) {
+        if (activePlayer && activeJourney && heuSlug) {
+            if (activePlayer && objIsEmpty(activePlayer.scores)) {
+                return 0;
+            } else {
+                return activePlayer.scores[activeJourney.slug][heuSlug].note;
+            }
+        }
     }
 
     return (
@@ -198,6 +236,9 @@ function evaluation() {
                                                   <div className="heuristicWrapper">
                                                       <HeuristicNode
                                                           slug={heuristic.slug}
+                                                          currentScore={getCurrentScore(
+                                                              heuristic.slug
+                                                          )}
                                                           setScore={(
                                                               slug,
                                                               score,
