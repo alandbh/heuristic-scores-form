@@ -1,6 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import styles from "../styles/Home.module.scss";
 import getData from "../services/getData";
 import { useEffect, useState } from "react";
@@ -10,27 +8,36 @@ import Header from "../components/Header/Header";
 import HeuristicNode from "../components/HeuristicNode/HeuristicNode";
 
 import React from "react";
-import Loader from "../components/Wave/Wave";
 
 // import { Container } from './styles';
 
 function evaluation() {
     const [players, setPlayers] = useState([]);
-    const [allPlayers, setAllPlayers] = useState([]);
+    // const [allPlayers, setAllPlayers] = useState([]);
     const [activePlayer, setActivePlayer] = useState(null);
 
     const [journeys, setJourneys] = useState([]);
     const [activeJourney, setActiveJourney] = useState(null);
 
-    const [allHeuristics, setAllHeuristics] = useState([]);
+    const [heuristics, setHeuristics] = useState([]);
     const [groups, setGroups] = useState([]);
 
-    const [hscore, setHeuScore] = useState(null);
+    // const [hscore, setHeuScore] = useState(null);
+
+    //Fetching all Journeys
+    useEffect(async () => {
+        setJourneys(await getData("journeys"));
+        // setActiveJourney(journeys[0]);
+    }, []);
+
+    // Selecting the FIRST JOURNEY
+    useEffect(() => {
+        console.log("PRIMEIRA", journeys);
+        setActiveJourney(journeys[0]);
+    }, [journeys]);
 
     function objIsEmpty(obj) {
-        return obj && obj.constructor === Object
-            ? Object.keys(obj).length === 0
-            : null;
+        return obj.constructor === Object && Object.keys(obj).length === 0;
     }
 
     /**
@@ -42,95 +49,59 @@ function evaluation() {
      * @param {string} note
      */
 
-    const updatedActivePlayer = { ...activePlayer };
-
     function setHeuristicScore(hSlug, hscoreValue, note) {
-        if (hSlug && hscoreValue) {
-            setHeuScore(hscoreValue);
+        if (hSlug && hscoreValue && activePlayer) {
+            const updatedActivePlayer = { ...activePlayer };
+            updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
+                score: hscoreValue,
+                note,
+            };
 
-            if (activePlayer && activeJourney) {
-                let journeyScores =
-                    updatedActivePlayer.scores[activeJourney.slug];
-
-                // check if it's empty
-
-                if (objIsEmpty(updatedActivePlayer.scores)) {
-                    updatedActivePlayer.scores[activeJourney.slug] = {};
-                    updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
-                        score: hscoreValue,
-                        note,
-                    };
-                } else if (!updatedActivePlayer.scores[activeJourney.slug]) {
-                    let objHSlug = {};
-
-                    objHSlug[hSlug] = {
-                        score: hscoreValue,
-                        note,
-                    };
-                    updatedActivePlayer.scores[activeJourney.slug] = objHSlug;
-                } else {
-                    updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
-                        score: hscoreValue,
-                        note,
-                    };
-                }
-
-                setActivePlayer(updatedActivePlayer);
-                // activePlayer.scores[activeJourney.slug][slug].score = hscoreValue;
-                // activePlayer.scores[activeJourney.slug][slug].none = note;
-                // activePlayer.scores[activeJourney.slug] = "alannnn";
-                console.log("SCORE", updatedActivePlayer);
-            }
+            setActivePlayer(updatedActivePlayer);
         }
     }
 
-    // Fetching all Players from Database
-    useEffect(async () => {
-        setAllPlayers(await getData("players", "name"));
-        // console.log(await getData("players", "name"));
-    }, []);
-
-    //Fetching all Journeys
-    useEffect(async () => {
-        setJourneys(await getData("journeys"));
-        setActiveJourney(journeys[1]);
-    }, []);
-
-    // Selecting the FIRST JOURNEY
-    // useEffect(() => {
-    //     setActiveJourney(journeys[1]);
-    // }, []);
-
     // Filtering Players from JOURNEY
 
-    useEffect(() => {
-        const playersFromJourney =
-            activeJourney && allPlayers.length > 0
-                ? activeJourney.players.map((id) => {
-                      return allPlayers.filter((player) => player.id === id)[0];
-                  })
-                : [];
+    useEffect(async () => {
+        const playersIdsFromJourney = activeJourney
+            ? activeJourney.players
+            : [];
 
-        // sort by name
-        const sortedPlayers = playersFromJourney.sort(function (a, b) {
-            const nameA = a.name.toUpperCase(); // ignore upper and lowercase
-            const nameB = b.name.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
+        console.log(
+            "mudou journey",
+            activeJourney ? activeJourney.players : ""
+        );
+        const playersFromJourney = await getData(
+            "players",
+            "slug",
+            playersIdsFromJourney.join(",")
+        );
 
-            // names must be equal
-            return 0;
-        });
-        // console.log("FILTERED", sortedPlayers);
-        setPlayers(sortedPlayers);
+        const playersFromJourneyWithScores = playersFromJourney.map(
+            (player) => {
+                if (objIsEmpty(player.scores)) {
+                    player.scores[activeJourney.slug] = {};
+                    activeJourney.heuristics.map((heuristic) => {
+                        player.scores[activeJourney.slug][heuristic] = {
+                            score: 3,
+                            note: "nana",
+                        };
+                    });
+                    return player;
+                } else {
+                    return player;
+                }
+            }
+        );
+
+        setPlayers(playersFromJourneyWithScores);
     }, [activeJourney]);
 
+    // Selecting the FIRST PLAYER
     useEffect(async () => {
-        setActivePlayer(players[0]);
+        console.log("PRIMEIRO PLAYER", players);
+        setActivePlayer(await players[0]);
     }, [players]);
 
     /**
@@ -138,7 +109,7 @@ function evaluation() {
      * HEURISTICS
      */
 
-    //Fetching all HEURISTICS based on active JOURNEY
+    //Fetching all HEURISTICS based on active JOURNEY/PLAYER
 
     useEffect(async () => {
         const heuristicsList = activeJourney
@@ -148,47 +119,75 @@ function evaluation() {
             ? await getData("heuristics", "slug", heuristicsList)
             : [];
         // setAllHeuristics([]);
-        setAllHeuristics(filteredHeuristics);
+        setHeuristics(filteredHeuristics);
         // debugger;
         // console.log(filteredHeuristics);
-    }, [activeJourney]);
+    }, [activeJourney, activePlayer]);
 
     useEffect(() => {
-        const allGroups = allHeuristics.map((heuristic) => heuristic.group);
-        const uniqueGroups = [...new Set(allGroups)];
-        setGroups(uniqueGroups);
-        console.log(groups);
-    }, [allHeuristics]);
+        if (heuristics.length > 0) {
+            const allGroups = heuristics.map((heuristic) => heuristic.group);
+            const uniqueGroups = [...new Set(allGroups)];
+            setGroups(uniqueGroups);
+            console.log(groups);
+        }
+    }, [heuristics, activePlayer]);
 
     function getHeuristicsByGroup(group) {
-        const heuristicsByGroup = allHeuristics.filter(
+        const heuristicsByGroup = heuristics.filter(
             (heuristic) => heuristic.group === group
         );
         return heuristicsByGroup;
     }
 
-    function getCurrentScore(heuSlug) {
-        if (activePlayer && activeJourney && heuSlug) {
-            if (objIsEmpty(activePlayer.scores)) {
-                console.log("vaziooo");
-                return { score: 0, note: "" };
-            } else if (!activePlayer.scores[activeJourney.slug]) {
-                console.log("ACT SCORES", activePlayer.scores);
-                console.log("ACT JOUR", activeJourney.slug);
-                // activePlayer.scores[activeJourney.slug] = {};
-                return { score: 0, note: "" };
-            } else {
-                return activePlayer.scores[activeJourney.slug][heuSlug];
-            }
-        }
-    }
-    function getCurrentNote(heuSlug) {
-        if (activePlayer && activeJourney && heuSlug) {
-            if (activePlayer && objIsEmpty(activePlayer.scores)) {
-                return 0;
-            } else {
-                return activePlayer.scores[activeJourney.slug][heuSlug].note;
-            }
+    function loopHeuristics(group) {
+        if (activeJourney && activePlayer && heuristics.length > 0) {
+            return getHeuristicsByGroup(group).map((heuristic, index) => {
+                console.log(activePlayer);
+                const currentScore =
+                    activePlayer.scores[activeJourney.slug][heuristic.slug];
+                return (
+                    <div key={heuristic.slug} className="sectionContainer">
+                        {/* <> {JSON.stringify(activeJourney.slug)}</> */}
+                        <div className="heuristicWrapper">
+                            <pre>
+                                {JSON.stringify(
+                                    activePlayer.scores[activeJourney.slug][
+                                        heuristic.slug
+                                    ]
+                                )}
+                            </pre>
+                            <HeuristicNode
+                                slug={heuristic.slug}
+                                title={heuristic.title}
+                                description={heuristic.description}
+                                currentScore={currentScore}
+                                activePlayer={activePlayer}
+                            />
+                        </div>
+                    </div>
+                    // <div key={heuristic.slug} className="sectionContainer">
+                    //     <div className="heuristicWrapper">
+                    //         <HeuristicNode
+                    //             slug={heuristic.slug}
+                    //             currentScore={
+                    //                 activePlayer.scores[activeJourney.slug][
+                    //                     heuristic.slug
+                    //                 ]
+                    //             }
+                    //             setScore={(slug, score, note) =>
+                    //                 setHeuristicScore(slug, score, note)
+                    //             }
+                    //             // setNote={(note)=>setNoteText()}
+                    //             title={heuristic.title}
+                    //             description={heuristic.description}
+                    //         />
+                    //     </div>
+                    // </div>
+                );
+            });
+        } else {
+            return <b>LOADING</b>;
         }
     }
 
@@ -227,41 +226,7 @@ function evaluation() {
                                           </div>
                                       </div>
 
-                                      {getHeuristicsByGroup(group, index).map(
-                                          (heuristic) => (
-                                              <div
-                                                  key={heuristic.slug}
-                                                  className="sectionContainer"
-                                              >
-                                                  <div className="heuristicWrapper">
-                                                      <HeuristicNode
-                                                          slug={heuristic.slug}
-                                                          currentScore={getCurrentScore(
-                                                              heuristic.slug
-                                                          )}
-                                                          setScore={(
-                                                              slug,
-                                                              score,
-                                                              note
-                                                          ) =>
-                                                              setHeuristicScore(
-                                                                  slug,
-                                                                  score,
-                                                                  note
-                                                              )
-                                                          }
-                                                          // setNote={(note)=>setNoteText()}
-                                                          title={
-                                                              heuristic.title
-                                                          }
-                                                          description={
-                                                              heuristic.description
-                                                          }
-                                                      />
-                                                  </div>
-                                              </div>
-                                          )
-                                      )}
+                                      {loopHeuristics(group)}
                                   </div>
                               ))
                             : "nnnnnnnnn"}
@@ -269,11 +234,9 @@ function evaluation() {
                 </div>
 
                 <pre style={{ maxWidth: 500, whiteSpace: "pre-line" }}>
-                    {updatedActivePlayer &&
-                    updatedActivePlayer.scores &&
-                    activeJourney
+                    {activePlayer && activePlayer.scores && activeJourney
                         ? JSON.stringify(
-                              updatedActivePlayer.scores[activeJourney.slug]
+                              activePlayer.scores[activeJourney.slug]
                           )
                         : ""}
                 </pre>
@@ -283,7 +246,6 @@ function evaluation() {
                 </h1>
 
                 <p>{activeJourney ? activeJourney.title : ""}</p>
-                <p>O SCORE É: {hscore ? hscore.h_1_1 : ""}</p>
             </main>
         </div>
     );

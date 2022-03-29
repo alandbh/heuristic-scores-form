@@ -19,10 +19,12 @@ function HeuristicNode({
     type = "scale",
     setScore,
     currentScore,
+    activePlayer,
     setNote,
     choice,
 }) {
     const [rangeValue, setRangeValue] = useState("2");
+    const [noteText, setNoteText] = useState(null);
 
     const heuristicScore = {};
 
@@ -33,21 +35,20 @@ function HeuristicNode({
     // Getting Current Score from DB
 
     useEffect(() => {
+        console.log("CURRENT SCORE", currentScore);
         setRangeValue(currentScore ? currentScore.score : 1);
-    }, []);
+        setNoteText(currentScore ? currentScore.note : "nothing");
+    }, [activePlayer]);
 
     /**
      *
      * Capturing Notes
      */
 
-    const [noteText, setNoteText] = useState(null);
+    // useEffect(() => {
 
-    useEffect(() => {
-        // console.log("TEXTOO", noteText);
-        // heuristicScore[slug] = rangeValue;
-        setScore(slug, rangeValue, noteText);
-    }, [rangeValue, noteText]);
+    //     setScore(slug, rangeValue, noteText);
+    // }, [rangeValue, noteText]);
 
     // useEffect(() => {
     //     // heuristicScore[slug] = rangeValue;
@@ -90,6 +91,7 @@ function HeuristicNode({
                 <div className="noteContainer">
                     <textarea
                         onChange={(ev) => setNoteText(ev.target.value)}
+                        value={noteText}
                     ></textarea>
                 </div>
             </div>

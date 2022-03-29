@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { ChevronDown } from "react-feather";
 import { useDetectOutsideClick } from "../../services/useDetectOutsideClick";
 import Wave from "../Wave/Wave";
@@ -15,10 +15,16 @@ function JourneySelect({ activeJourney, setActiveJourney, journeys }) {
         setListOpen(!listOpen);
     }
 
-    function handleSelectJourney(player) {
-        setActiveJourney(player);
+    function handleSelectJourney(journey) {
+        setActiveJourney(journey);
         handleToggle();
     }
+
+    useEffect(() => {
+        if (activeJourney) {
+            setActiveJourney(activeJourney);
+        }
+    }, []);
 
     return (
         <div className={styles.container}>
