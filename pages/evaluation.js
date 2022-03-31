@@ -48,20 +48,24 @@ function evaluation() {
      * @param {number} hscoreValue
      * @param {string} note
      */
+    let updatedActivePlayer;
 
     function setHeuristicScore(hSlug, hscoreValue, note) {
+        console.log("SETANDO SCORE", hSlug, hscoreValue, note);
         if (hSlug && hscoreValue && activePlayer) {
-            const updatedActivePlayer = { ...activePlayer };
+            updatedActivePlayer = { ...activePlayer };
             updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
                 score: hscoreValue,
                 note,
             };
 
-            setActivePlayer(updatedActivePlayer);
+            // setActivePlayer(updatedActivePlayer);
         }
     }
 
     // Filtering Players from JOURNEY
+
+    let isFirstLoad = true;
 
     useEffect(async () => {
         const playersIdsFromJourney = activeJourney
@@ -78,30 +82,35 @@ function evaluation() {
             playersIdsFromJourney.join(",")
         );
 
-        const playersFromJourneyWithScores = playersFromJourney.map(
-            (player) => {
-                if (objIsEmpty(player.scores)) {
-                    player.scores[activeJourney.slug] = {};
-                    activeJourney.heuristics.map((heuristic) => {
-                        player.scores[activeJourney.slug][heuristic] = {
-                            score: 3,
-                            note: "nana",
-                        };
-                    });
-                    return player;
-                } else {
-                    return player;
-                }
-            }
-        );
+        const playersFromJourneyWithScores = isFirstLoad
+            ? playersFromJourney.map((player) => {
+                  if (objIsEmpty(player.scores)) {
+                      journeys.map((journey) => {
+                          player.scores[journey.slug] = {};
+                      });
+                      // player.scores[activeJourney.slug] = {};
+                      activeJourney.heuristics.map((heuristic) => {
+                          player.scores[activeJourney.slug][heuristic] = {
+                              score: 3,
+                              note: "nana",
+                          };
+                      });
+                      isFirstLoad = false;
+                      return player;
+                  } else {
+                      isFirstLoad = false;
+                      return player;
+                  }
+              })
+            : players;
 
         setPlayers(playersFromJourneyWithScores);
     }, [activeJourney]);
 
     // Selecting the FIRST PLAYER
-    useEffect(async () => {
+    useEffect(() => {
         console.log("PRIMEIRO PLAYER", players);
-        setActivePlayer(await players[0]);
+        setActivePlayer(players[0]);
     }, [players]);
 
     /**
@@ -163,27 +172,12 @@ function evaluation() {
                                 description={heuristic.description}
                                 currentScore={currentScore}
                                 activePlayer={activePlayer}
+                                setScore={(slug, score, note) =>
+                                    setHeuristicScore(slug, score, note)
+                                }
                             />
                         </div>
                     </div>
-                    // <div key={heuristic.slug} className="sectionContainer">
-                    //     <div className="heuristicWrapper">
-                    //         <HeuristicNode
-                    //             slug={heuristic.slug}
-                    //             currentScore={
-                    //                 activePlayer.scores[activeJourney.slug][
-                    //                     heuristic.slug
-                    //                 ]
-                    //             }
-                    //             setScore={(slug, score, note) =>
-                    //                 setHeuristicScore(slug, score, note)
-                    //             }
-                    //             // setNote={(note)=>setNoteText()}
-                    //             title={heuristic.title}
-                    //             description={heuristic.description}
-                    //         />
-                    //     </div>
-                    // </div>
                 );
             });
         } else {

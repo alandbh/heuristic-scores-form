@@ -24,21 +24,33 @@ function HeuristicNode({
     choice,
 }) {
     const [rangeValue, setRangeValue] = useState("2");
-    const [noteText, setNoteText] = useState(null);
+    const [noteText, setNoteText] = useState("");
 
     const heuristicScore = {};
 
     function setHeuristicScore(value) {
         setRangeValue(value);
+        setScore(slug, rangeValue, noteText);
     }
 
     // Getting Current Score from DB
 
     useEffect(() => {
-        console.log("CURRENT SCORE", currentScore);
-        setRangeValue(currentScore ? currentScore.score : 1);
-        setNoteText(currentScore ? currentScore.note : "nothing");
+        if (currentScore) {
+            setRangeValue(currentScore.score);
+            setNoteText(currentScore.note);
+        }
     }, [activePlayer]);
+    // useEffect(() => {
+    //     setScore(slug, rangeValue, noteText);
+    // }, [rangeValue]);
+    // useEffect(() => {
+    //     setScore(slug, rangeValue, noteText);
+    // }, [noteText]);
+
+    // useEffect(() => {
+    //     setScore(slug, rangeValue, noteText);
+    // }, []);
 
     /**
      *

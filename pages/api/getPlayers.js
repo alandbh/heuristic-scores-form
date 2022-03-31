@@ -12,7 +12,8 @@ export default async (req, res) => {
         ? new RegExp(req.query.find, "g")
         : new RegExp(".*", "g");
 
-    const findMany = is_array ? { $in: findArray } : { $regex: re };
+    // const findMany = is_array ? { $in: findArray } : { $regex: re };
+    const findMany = { $in: findArray };
     const sorting = req.query.orderBy || "slug";
 
     const players = await collection
