@@ -5,19 +5,21 @@ export default async (req, res) => {
 
     const is_array = req.query.find.includes(",");
 
-    let findArray = req.query.find.split(",").map((item) => Number(item));
-    console.log(findArray);
-
     const re = req.query.find
         ? new RegExp(req.query.find, "g")
         : new RegExp(".*", "g");
 
+    let findArray = req.query.find.split(",").map((item) => Number(item));
+    console.log(findArray);
+
     // const findMany = is_array ? { $in: findArray } : { $regex: re };
-    const findMany = { $in: findArray };
+    const findMany = req.query.find
+        ? { id: { $in: findArray } }
+        : { slug: { $regex: re } };
     const sorting = req.query.orderBy || "slug";
 
     const players = await collection
-        .find({ id: findMany })
+        .find(findMany)
         .sort({ [sorting]: 1 })
         .limit(20000)
         .toArray();
