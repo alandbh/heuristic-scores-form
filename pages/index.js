@@ -92,10 +92,35 @@ async function handlerChange(query) {
     //?player=Casas%20Bahia
 }
 
+function seed() {
+    arr_jornadas.map((jornada) => {
+        arr_players.map((player) => {
+            player.scores[jornada.slug] = {};
+
+            jornada.heuristics.map((heuristic) => {
+                player.scores[jornada.slug][heuristic] = {
+                    score: 0,
+                    note: "n/a",
+                };
+            });
+        });
+    });
+
+    console.log("NEW PLAYERS", arr_players);
+}
+
 export default function Home() {
     return (
         <div className={styles.container}>
             <div>
+                <div>
+                    <button
+                        className="bg-indigo-500 p-2 px-4 rounded text-white font-bold my-6"
+                        onClick={() => seed()}
+                    >
+                        Seed
+                    </button>
+                </div>
                 <button
                     className="bg-indigo-500 p-2 px-4 rounded text-white  font-bold my-6"
                     onClick={addPlayerHandler}
@@ -120,6 +145,7 @@ export default function Home() {
                     Add Heuristics
                 </button>
             </div>
+
             <div>
                 <button
                     className="bg-blue-500 p-2 px-4 rounded text-white font-bold  my-6"
