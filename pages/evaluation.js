@@ -140,7 +140,7 @@ function evaluation() {
     // Setting Heuristic Groups
     useEffect(() => {
         setGroups(getHeuristcGroups(allHeuristics));
-    }, [allHeuristics]);
+    }, [allHeuristics, activePlayer]);
 
     /**
      *
@@ -195,79 +195,10 @@ function evaluation() {
             };
 
             setActivePlayer(updatedActivePlayer);
-            loadedData.activePlayer = true;
+            // loadedData.activePlayer = true;
+            // setLoadedData((loadedData.activePlayer = true));
         }
     }
-
-    // Filtering Players from JOURNEY
-
-    // useEffect(async () => {
-    //     console.log("mudou journey");
-    //     const playersFromJourney = await getData(
-    //         "players",
-    //         "slug",
-    //         playersIdsFromJourney.join(",")
-    //     );
-
-    //     const playersFromJourneyWithScores = isFirstLoad
-    //         ? playersFromJourney.map((player) => {
-    //               if (objIsEmpty(player.scores)) {
-    //                   journeys.map((journey) => {
-    //                       player.scores[journey.slug] = {};
-    //                   });
-    //                   // player.scores[activeJourney.slug] = {};
-    //                   activeJourney.heuristics.map((heuristic) => {
-    //                       player.scores[activeJourney.slug][heuristic] = {
-    //                           score: 3,
-    //                           note: "nana",
-    //                       };
-    //                   });
-    //                   isFirstLoad = false;
-    //                   return player;
-    //               } else {
-    //                   isFirstLoad = false;
-    //                   return player;
-    //               }
-    //           })
-    //         : players;
-
-    //     setPlayers(playersFromJourneyWithScores);
-    // }, [activeJourney]);
-
-    // Selecting the FIRST PLAYER
-    // useEffect(() => {
-    //     console.log("PRIMEIRO PLAYER", players);
-    //     setActivePlayer(players[0]);
-    // }, [players]);
-
-    /**
-     *
-     * HEURISTICS
-     */
-
-    //Fetching all HEURISTICS based on active JOURNEY/PLAYER
-
-    // useEffect(async () => {
-    //     const heuristicsList = activeJourney
-    //         ? activeJourney.heuristics.join()
-    //         : "";
-    //     const filteredHeuristics = activeJourney
-    //         ? await getData("heuristics", "slug", heuristicsList)
-    //         : [];
-    //     // setAllHeuristics([]);
-    //     setHeuristics(filteredHeuristics);
-    //     // debugger;
-    //     // console.log(filteredHeuristics);
-    // }, [activeJourney, activePlayer]);
-
-    // useEffect(() => {
-    //     if (heuristics.length > 0) {
-    //         const allGroups = heuristics.map((heuristic) => heuristic.group);
-    //         const uniqueGroups = [...new Set(allGroups)];
-    //         setGroups(uniqueGroups);
-    //         console.log(groups);
-    //     }
-    // }, [heuristics, activePlayer]);
 
     function getHeuristicsByGroup(group) {
         const heuristicsByGroup = heuristics.filter(
@@ -342,6 +273,61 @@ function evaluation() {
                 ) : (
                     <div>Espera</div>
                 )}
+                <main>
+                    {activePlayer !== null ? (
+                        groups.map((group, index) => {
+                            let aaa;
+                            return (
+                                <section key={index}>
+                                    <h1>
+                                        <span>{index + 1 + ". "}</span>
+                                        {group.name}
+                                    </h1>
+
+                                    {group.heuristics
+                                        .filter((heuristic) =>
+                                            activeJourney.heuristics.includes(
+                                                heuristic.slug
+                                            )
+                                        )
+                                        .map((heuristic, index) => {
+                                            // debugger;
+
+                                            return (
+                                                <HeuristicNode
+                                                    key={index}
+                                                    slug={heuristic.slug}
+                                                    title={heuristic.title}
+                                                    description={
+                                                        heuristic.description
+                                                    }
+                                                    currentScore={
+                                                        activePlayer.scores[
+                                                            activeJourney.slug
+                                                        ][heuristic.slug]
+                                                    }
+                                                    activePlayer={activePlayer}
+                                                    setScore={(
+                                                        slug,
+                                                        score,
+                                                        note
+                                                    ) =>
+                                                        setHeuristicScore(
+                                                            slug,
+                                                            score,
+                                                            note
+                                                        )
+                                                    }
+                                                />
+                                            );
+                                        })}
+                                </section>
+                            );
+                        })
+                    ) : (
+                        <div>Carregando</div>
+                    )}
+                </main>
             </div>
         )
     );

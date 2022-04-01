@@ -36,17 +36,19 @@ function HeuristicNode({
     // Getting Current Score from DB
 
     useEffect(() => {
+        // debugger;
         if (currentScore) {
             setRangeValue(currentScore.score);
             setNoteText(currentScore.note);
         }
-    }, [activePlayer]);
-    // useEffect(() => {
-    //     setScore(slug, rangeValue, noteText);
-    // }, [rangeValue]);
-    // useEffect(() => {
-    //     setScore(slug, rangeValue, noteText);
-    // }, [noteText]);
+    }, []);
+
+    useEffect(() => {
+        setScore(slug, rangeValue, noteText);
+    }, [rangeValue]);
+    useEffect(() => {
+        setScore(slug, rangeValue, noteText);
+    }, [noteText]);
 
     // useEffect(() => {
     //     setScore(slug, rangeValue, noteText);
@@ -81,9 +83,7 @@ function HeuristicNode({
                             min={1}
                             max={5}
                             value={rangeValue}
-                            onChange={(ev) =>
-                                setHeuristicScore(ev.target.value)
-                            }
+                            onChange={(ev) => setRangeValue(ev.target.value)}
                         />
                     ) : (
                         <select>
