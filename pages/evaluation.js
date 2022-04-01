@@ -204,9 +204,9 @@ function evaluation() {
 
             // setActivePlayer({ ...updatedActivePlayer });
 
-            localStorage.setItem("activePlayer", "");
+            localStorage.setItem("localActivePlayer", "");
             localStorage.setItem(
-                "activePlayer",
+                "localActivePlayer",
                 JSON.stringify({ ...updatedActivePlayer })
             );
 
@@ -224,42 +224,6 @@ function evaluation() {
             (heuristic) => heuristic.group === group
         );
         return heuristicsByGroup;
-    }
-
-    function loopHeuristics(group) {
-        if (activeJourney && activePlayer && heuristics.length > 0) {
-            return getHeuristicsByGroup(group).map((heuristic, index) => {
-                console.log(activePlayer);
-                const currentScore =
-                    activePlayer.scores[activeJourney.slug][heuristic.slug];
-                return (
-                    <div key={heuristic.slug} className="sectionContainer">
-                        {/* <> {JSON.stringify(activeJourney.slug)}</> */}
-                        <div className="heuristicWrapper">
-                            <pre>
-                                {JSON.stringify(
-                                    activePlayer.scores[activeJourney.slug][
-                                        heuristic.slug
-                                    ]
-                                )}
-                            </pre>
-                            <HeuristicNode
-                                slug={heuristic.slug}
-                                title={heuristic.title}
-                                description={heuristic.description}
-                                currentScore={currentScore}
-                                activePlayer={localActivePlayer}
-                                setScore={(slug, score, note) =>
-                                    setHeuristicScore(slug, score, note)
-                                }
-                            />
-                        </div>
-                    </div>
-                );
-            });
-        } else {
-            return <b>LOADING</b>;
-        }
     }
 
     const [mounted, setMounted] = useState(false);
