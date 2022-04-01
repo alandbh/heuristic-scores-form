@@ -59,7 +59,7 @@ function objIsEmpty(obj) {
 }
 // import { Container } from './styles';
 
-let localActivePlayer = {};
+// let localActivePlayer = {};
 
 function evaluation() {
     const [allPlayers, setAllPlayers] = useLocalStorage("allPlayers", []);
@@ -90,6 +90,8 @@ function evaluation() {
         activeJourney: false,
         players: false,
     });
+
+    const [localActivePlayer, setLocalActivePlayer] = useState({});
 
     /**
      *
@@ -197,6 +199,10 @@ function evaluation() {
                 note: values.note,
             };
 
+            // setTimeout(() => {
+            //     setActivePlayer({ ...updatedActivePlayer });
+            // }, 1000);
+
             // setActivePlayer({ ...updatedActivePlayer });
 
             localStorage.setItem("activePlayer", "");
@@ -205,7 +211,9 @@ function evaluation() {
                 JSON.stringify({ ...updatedActivePlayer })
             );
 
-            localActivePlayer = { ...updatedActivePlayer };
+            // localActivePlayer = { ...updatedActivePlayer };
+
+            setLocalActivePlayer({ ...updatedActivePlayer });
 
             // loadedData.activePlayer = true;
             // setLoadedData((loadedData.activePlayer = true));
@@ -336,6 +344,8 @@ function evaluation() {
                     ) : (
                         <div>Carregando</div>
                     )}
+
+                    <pre>{JSON.stringify(localActivePlayer)}</pre>
                 </main>
             </div>
         )
