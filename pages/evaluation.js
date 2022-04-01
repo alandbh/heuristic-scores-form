@@ -10,6 +10,53 @@ import HeuristicNode from "../components/HeuristicNode/HeuristicNode";
 
 import React from "react";
 
+function orderBy(array, param) {
+    return array.sort((a, b) => a[param].localeCompare(b[param]));
+}
+
+function getPlayersFromJourney(journey, allPlayers) {
+    if (journey && allPlayers.length > 0) {
+    }
+    const unsortedPlayers = journey.players.map((plId) => {
+        return allPlayers.filter((player) => player.id === plId)[0];
+    });
+    return orderBy(unsortedPlayers, "slug");
+}
+
+function getHeuristicsFromJourney(journey, allHeuristics) {
+    if (journey && allHeuristics.length > 0) {
+        return journey.heuristics.map((hSlug) => {
+            return allHeuristics.filter(
+                (heuristic) => heuristic.slug === hSlug
+            )[0];
+        });
+    }
+}
+
+function getHeuristcGroups(allHeuristics) {
+    if (allHeuristics.length > 0) {
+        const allGroups = allHeuristics.map((heuristic) => heuristic.group);
+        const uniqueGroups = [...new Set(allGroups)];
+
+        const groupsWithHeuristics = [];
+
+        uniqueGroups.map((group) => {
+            groupsWithHeuristics.push({
+                name: group,
+                heuristics: allHeuristics.filter(
+                    (heuristic) => heuristic.group === group
+                ),
+            });
+        });
+
+        return groupsWithHeuristics;
+    }
+
+    return [];
+}
+function objIsEmpty(obj) {
+    return obj.constructor === Object && Object.keys(obj).length === 0;
+}
 // import { Container } from './styles';
 
 function evaluation() {
@@ -33,32 +80,100 @@ function evaluation() {
     const [heuristics, setHeuristics] = useLocalStorage("heuristics", []);
     const [groups, setGroups] = useLocalStorage("groups", []);
 
-    // const [hscore, setHeuScore] = useState(null);
+    const [loadedData, setLoadedData] = useState({
+        journeys: false,
+        allPlayers: false,
+        heuristics: false,
+        activePlayer: false,
+        activeJourney: false,
+        players: false,
+    });
 
     /**
      *
      * Fetching All Data From Database
      */
-    useEffect(async () => {
+    useEffect(() => {
         // All Journeys
 
-        setJourneys(await getData("journeys"));
+        getData("journeys").then((data) => {
+            console.log("dentro", data);
+            setJourneys(data);
+            setLoadedData((loadedData.journeys = true));
+            // loadedData.journeys = true;
+        });
 
         // Fetching all Players
-        setAllPlayers(await getData("players"));
+        getData("players").then((data) => {
+            setAllPlayers(data);
+            setLoadedData((loadedData.allPlayers = true));
+            // loadedData.allPlayers = true;
+        });
 
         // Fetching all Heuristics
-        setAllHeuristics(await getData("heuristics"));
+        getData("heuristics").then((data) => {
+            setAllHeuristics(data);
+            setLoadedData((loadedData.heuristics = true));
+        });
     }, []);
 
     // Selecting the FIRST JOURNEY
     useEffect(() => {
-        setActiveJourney(journeys[0]);
+        if (journeys.length > 0 && activeJourney === null) {
+            console.log("setando journey", journeys[0]);
+            setActiveJourney(journeys[0]);
+            // setLoadedData((loadedData.activeJourney = true));
+        }
     }, [journeys]);
 
-    function objIsEmpty(obj) {
-        return obj.constructor === Object && Object.keys(obj).length === 0;
-    }
+    /**
+     *
+     * HEURISTICS
+     */
+
+    // Getting  HEURISTICS based on active JOURNEY
+
+    useEffect(() => {
+        setHeuristics(getHeuristicsFromJourney(activeJourney, allHeuristics));
+    }, [activeJourney, allHeuristics]);
+
+    // Setting Heuristic Groups
+    useEffect(() => {
+        setGroups(getHeuristcGroups(allHeuristics));
+    }, [allHeuristics]);
+
+    /**
+     *
+     * PLAYERS
+     *
+     */
+
+    // Filtering Players from ACTIVE JOURNEY
+
+    useEffect(() => {
+        // console.log("mudou", loadedData.activeJourney);
+        console.log("mudou journey");
+        if (
+            activeJourney !== null &&
+            activeJourney !== undefined &&
+            allPlayers.length > 0
+        ) {
+            const playersFromJourney = getPlayersFromJourney(
+                activeJourney,
+                allPlayers
+            );
+            setPlayers(playersFromJourney);
+        }
+        // loadedData.players = true;
+    }, [activeJourney]);
+
+    // Selecting the FIRST PLAYER
+    useEffect(() => {
+        if (players.length > 0) {
+            console.log("PRIMEIRO PLAYER", activePlayer);
+            setActivePlayer(players[0]);
+        }
+    }, [players]);
 
     /**
      *
@@ -80,6 +195,7 @@ function evaluation() {
             };
 
             setActivePlayer(updatedActivePlayer);
+            loadedData.activePlayer = true;
         }
     }
 
@@ -196,14 +312,38 @@ function evaluation() {
         }
     }
 
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, [journeys]);
+
     return (
-        <div>
-            <Head>
-                <title>Evaluation - Heuristics Collector</title>
-                <meta name="description" content="Heuristics collector" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-        </div>
+        mounted && (
+            <div>
+                <Head>
+                    <title>Evaluation - Heuristics Collector</title>
+                    <meta name="description" content="Heuristics collector" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+
+                {journeys && journeys.length > 0 ? (
+                    <Header>
+                        <JourneySelect
+                            activeJourney={activeJourney}
+                            journeys={journeys}
+                            setActiveJourney={setActiveJourney}
+                        ></JourneySelect>
+                        <PlayerSelect
+                            activePlayer={activePlayer}
+                            players={players}
+                            setActivePlayer={setActivePlayer}
+                        ></PlayerSelect>
+                    </Header>
+                ) : (
+                    <div>Espera</div>
+                )}
+            </div>
+        )
     );
 }
 
