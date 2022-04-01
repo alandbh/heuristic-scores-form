@@ -20,11 +20,14 @@ function HeuristicNode({
     setScore,
     currentScore,
     activePlayer,
+    activeJourney,
     setNote,
     choice,
 }) {
     const [rangeValue, setRangeValue] = useState("2");
     const [noteText, setNoteText] = useState("");
+    const [changed, setChanged] = useState(false);
+    const [values, setValues] = useState({ score: 2, note: "n" });
 
     const heuristicScore = {};
 
@@ -37,18 +40,17 @@ function HeuristicNode({
 
     useEffect(() => {
         // debugger;
-        if (currentScore) {
-            setRangeValue(currentScore.score);
-            setNoteText(currentScore.note);
+        if (activePlayer[activeJourney]) {
+            // setRangeValue(currentScore.score);
+            // setNoteText(currentScore.note);
+            setValues({ ...activePlayer.scores[activeJourney][slug] });
+            console.log("currentScore:", activePlayer[activeJourney].scores);
         }
     }, []);
 
-    useEffect(() => {
-        setScore(slug, rangeValue, noteText);
-    }, [rangeValue]);
-    useEffect(() => {
-        setScore(slug, rangeValue, noteText);
-    }, [noteText]);
+    // useEffect(() => {
+    //     setScore(slug, rangeValue, noteText);
+    // }, [noteText]);
 
     // useEffect(() => {
     //     setScore(slug, rangeValue, noteText);
@@ -59,14 +61,26 @@ function HeuristicNode({
      * Capturing Notes
      */
 
-    // useEffect(() => {
+    useEffect(() => {
+        console.log("mudou activeJourney aqui", activeJourney);
+        // debugger;
+        if (activePlayer && activeJourney !== null) {
+            console.log("mudou player aqui", activePlayer);
+            // setRangeValue(currentScore.score);
+            // setNoteText(currentScore.note);
+            setValues({ ...activePlayer.scores[activeJourney][slug] });
+            // console.log("currentScore:", activePlayer[activeJourney].scores);
+        }
+    }, [activePlayer]);
 
-    //     setScore(slug, rangeValue, noteText);
-    // }, [rangeValue, noteText]);
+    useEffect(() => {
+        setScore(slug, { ...values });
+    }, [values]);
 
     // useEffect(() => {
     //     // heuristicScore[slug] = rangeValue;
-    //     setNote(noteText);
+    //     setChanged(true);
+    //     console.log("mudouuuu");
     // }, [noteText]);
 
     return (
@@ -82,8 +96,10 @@ function HeuristicNode({
                             type={"range"}
                             min={1}
                             max={5}
-                            value={rangeValue}
-                            onChange={(ev) => setRangeValue(ev.target.value)}
+                            value={values.score}
+                            onChange={(ev) =>
+                                setValues({ ...values, score: ev.target.value })
+                            }
                         />
                     ) : (
                         <select>
@@ -102,8 +118,10 @@ function HeuristicNode({
 
                 <div className="noteContainer">
                     <textarea
-                        onChange={(ev) => setNoteText(ev.target.value)}
-                        value={noteText}
+                        onChange={(ev) =>
+                            setValues({ ...values, note: ev.target.value })
+                        }
+                        value={values.note}
                     ></textarea>
                 </div>
             </div>

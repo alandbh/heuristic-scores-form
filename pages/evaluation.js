@@ -59,6 +59,8 @@ function objIsEmpty(obj) {
 }
 // import { Container } from './styles';
 
+let localActivePlayer = {};
+
 function evaluation() {
     const [allPlayers, setAllPlayers] = useLocalStorage("allPlayers", []);
     const [players, setPlayers] = useLocalStorage("players", []);
@@ -158,6 +160,7 @@ function evaluation() {
             activeJourney !== undefined &&
             allPlayers.length > 0
         ) {
+            console.log("mudou journey - Setting Players");
             const playersFromJourney = getPlayersFromJourney(
                 activeJourney,
                 allPlayers
@@ -185,16 +188,25 @@ function evaluation() {
      */
     let updatedActivePlayer;
 
-    function setHeuristicScore(hSlug, hscoreValue, note) {
-        console.log("SETANDO SCORE", hSlug, hscoreValue, note);
-        if (hSlug && hscoreValue && activePlayer) {
+    function setHeuristicScore(hSlug, values) {
+        console.log("SETANDO SCORE", hSlug, values);
+        if (hSlug && values && activePlayer) {
             updatedActivePlayer = { ...activePlayer };
             updatedActivePlayer.scores[activeJourney.slug][hSlug] = {
-                score: hscoreValue,
-                note,
+                score: values.score,
+                note: values.note,
             };
 
-            setActivePlayer(updatedActivePlayer);
+            // setActivePlayer({ ...updatedActivePlayer });
+
+            localStorage.setItem("activePlayer", "");
+            localStorage.setItem(
+                "activePlayer",
+                JSON.stringify({ ...updatedActivePlayer })
+            );
+
+            localActivePlayer = { ...updatedActivePlayer };
+
             // loadedData.activePlayer = true;
             // setLoadedData((loadedData.activePlayer = true));
         }
@@ -248,8 +260,12 @@ function evaluation() {
         setMounted(true);
     }, [journeys]);
 
+    function check() {
+        return loadedData && groups !== undefined && groups !== null;
+    }
+
     return (
-        mounted && (
+        check() && (
             <div>
                 <Head>
                     <title>Evaluation - Heuristics Collector</title>
@@ -257,7 +273,7 @@ function evaluation() {
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
 
-                {journeys && journeys.length > 0 ? (
+                {players && journeys && journeys.length > 0 ? (
                     <Header>
                         <JourneySelect
                             activeJourney={activeJourney}
@@ -297,25 +313,18 @@ function evaluation() {
                                                 <HeuristicNode
                                                     key={index}
                                                     slug={heuristic.slug}
+                                                    activeJourney={
+                                                        activeJourney.slug
+                                                    }
                                                     title={heuristic.title}
                                                     description={
                                                         heuristic.description
                                                     }
-                                                    currentScore={
-                                                        activePlayer.scores[
-                                                            activeJourney.slug
-                                                        ][heuristic.slug]
-                                                    }
                                                     activePlayer={activePlayer}
-                                                    setScore={(
-                                                        slug,
-                                                        score,
-                                                        note
-                                                    ) =>
+                                                    setScore={(slug, values) =>
                                                         setHeuristicScore(
                                                             slug,
-                                                            score,
-                                                            note
+                                                            values
                                                         )
                                                     }
                                                 />
