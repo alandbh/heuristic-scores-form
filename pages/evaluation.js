@@ -92,7 +92,6 @@ function evaluation() {
     });
 
     const [localActivePlayer, setLocalActivePlayer] = useState({});
-
     /**
      *
      * Fetching All Data From Database
@@ -249,7 +248,7 @@ function evaluation() {
                                 title={heuristic.title}
                                 description={heuristic.description}
                                 currentScore={currentScore}
-                                activePlayer={activePlayer}
+                                activePlayer={localActivePlayer}
                                 setScore={(slug, score, note) =>
                                     setHeuristicScore(slug, score, note)
                                 }
