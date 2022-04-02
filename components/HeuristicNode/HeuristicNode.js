@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Range from "../Range";
+import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
 
 // import { Container } from './styles';
 
@@ -30,6 +32,20 @@ function HeuristicNode({
     const [values, setValues] = useState({ score: 2, note: "n" });
 
     const heuristicScore = {};
+
+    const debouncedSaving = useCallback(
+        debounce(() => {
+            console.log("debounced  salvar agora!!!");
+        }, 2000),
+        []
+    );
+    const debounceFn = useCallback(
+        debounce((func) => {
+            console.log("DEBOU");
+            func();
+        }, 4000),
+        []
+    );
 
     function setHeuristicScore(value) {
         setRangeValue(value);
@@ -68,13 +84,18 @@ function HeuristicNode({
             console.log("mudou player aqui", activePlayer);
             // setRangeValue(currentScore.score);
             // setNoteText(currentScore.note);
+            // setValues({ ...activePlayer.scores[activeJourney][slug] });
             setValues({ ...activePlayer.scores[activeJourney][slug] });
+            // debounceFn(() => {
+            // });
             // console.log("currentScore:", activePlayer[activeJourney].scores);
         }
     }, [activePlayer]);
 
     useEffect(() => {
         setScore(slug, { ...values });
+
+        // debouncedSaving();
     }, [values]);
 
     // useEffect(() => {
@@ -82,6 +103,12 @@ function HeuristicNode({
     //     setChanged(true);
     //     console.log("mudouuuu");
     // }, [noteText]);
+
+    function handleChangeRange(ev) {
+        setValues({ ...values, score: ev.target.value });
+
+        // console.log("salvar agora!!!");
+    }
 
     return (
         <div className="heuristicWrapper">
@@ -97,9 +124,7 @@ function HeuristicNode({
                             min={1}
                             max={5}
                             value={values.score}
-                            onChange={(ev) =>
-                                setValues({ ...values, score: ev.target.value })
-                            }
+                            onChange={(ev) => handleChangeRange(ev)}
                         />
                     ) : (
                         <select>

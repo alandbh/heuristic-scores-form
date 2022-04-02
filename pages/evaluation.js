@@ -1,14 +1,32 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.scss";
 import getData from "../services/getData";
-import { useEffect, useState } from "react";
-import { useLocalStorage } from "./api/utils";
+import { useEffect, useState, useCallback } from "react";
+import { useLocalStorage, updadePlayer } from "./api/utils";
 import PlayerSelect from "../components/Playerselect/Playerselect";
 import JourneySelect from "../components/Journeyselect/Journeyselect";
 import Header from "../components/Header/Header";
 import HeuristicNode from "../components/HeuristicNode/HeuristicNode";
 
 import React from "react";
+import debounce from "lodash.debounce";
+
+let count = 0;
+
+setInterval(() => {
+    count++;
+
+    if (typeof window !== "undefined") {
+        let _localActivePlayer = JSON.parse(
+            localStorage.getItem("localActivePlayer")
+        );
+        delete _localActivePlayer._id;
+        console.log("TEMPO SALVAR - ", _localActivePlayer);
+        updadePlayer(_localActivePlayer);
+    }
+}, 10 * 1000);
+
+// setInterval()
 
 function orderBy(array, param) {
     return array.sort((a, b) => a[param].localeCompare(b[param]));
@@ -121,13 +139,19 @@ function evaluation() {
     }, []);
 
     // Selecting the FIRST JOURNEY
-    useEffect(() => {
-        if (journeys.length > 0 && activeJourney === null) {
-            console.log("setando journey", journeys[0]);
-            setActiveJourney(journeys[0]);
-            // setLoadedData((loadedData.activeJourney = true));
-        }
-    }, [journeys]);
+    useEffect(
+        debounce(() => {
+            if (journeys.length > 0 && activeJourney === null) {
+                console.log("setando journey", journeys[0]);
+                setActiveJourney(journeys[0]);
+                // setLoadedData((loadedData.activeJourney = true));
+
+                console.log("DEBOUUU222");
+            }
+        }, 2000),
+
+        [journeys]
+    );
 
     /**
      *
@@ -172,12 +196,23 @@ function evaluation() {
     }, [activeJourney]);
 
     // Selecting the FIRST PLAYER
-    useEffect(() => {
-        if (players.length > 0) {
-            console.log("PRIMEIRO PLAYER", activePlayer);
-            setActivePlayer(players[0]);
-        }
-    }, [players]);
+
+    useEffect(
+        debounce(() => {
+            console.log("ACTIVE PLAYER");
+            if (players.length > 0) {
+                console.log("PRIMEIRO PLAYER", activePlayer);
+                setActivePlayer(players[0]);
+            }
+        }, 2000),
+        [players]
+    );
+    // useEffect(() => {
+    //     if (players.length > 0) {
+    //         console.log("PRIMEIRO PLAYER", activePlayer);
+    //         setActivePlayer(players[0]);
+    //     }
+    // }, [players]);
 
     /**
      *
@@ -232,6 +267,7 @@ function evaluation() {
     }, [journeys]);
 
     function check() {
+        console.log("CARREGOU");
         return loadedData && groups !== undefined && groups !== null;
     }
 

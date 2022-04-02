@@ -3,7 +3,7 @@ import mongo from "./service";
 export default async function handler(req, res) {
     const { collection, client } = await mongo("players");
 
-    const _query = { nome: req.query.player };
+    const _query = { name: req.query.player };
     // console.log("asasasasa");
     // console.log(req.query.player);
 
