@@ -13,18 +13,18 @@ import debounce from "lodash.debounce";
 
 let count = 0;
 
-// setInterval(() => {
-//     count++;
+setInterval(() => {
+    count++;
 
-//     if (typeof window !== "undefined") {
-//         let _localActivePlayer = JSON.parse(
-//             localStorage.getItem("localActivePlayer")
-//         );
-//         delete _localActivePlayer._id;
-//         console.log("TEMPO SALVAR - ", _localActivePlayer);
-//         updadePlayer(_localActivePlayer);
-//     }
-// }, 30 * 1000);
+    if (typeof window !== "undefined") {
+        let _localActivePlayer = JSON.parse(
+            localStorage.getItem("localActivePlayer")
+        );
+        delete _localActivePlayer._id;
+        console.log("TEMPO SALVAR - ", _localActivePlayer);
+        updadePlayer(_localActivePlayer);
+    }
+}, 30 * 1000);
 
 // setInterval()
 
@@ -208,7 +208,9 @@ function evaluation() {
                 activeJourney,
                 allPlayers
             );
+            // debugger;
             setPlayers(playersFromJourney);
+            setPlayerHasChanged(true);
         }
         // loadedData.players = true;
     }, [activeJourney]);
@@ -256,15 +258,17 @@ function evaluation() {
 
     let debCount = 0;
     const debSetScore = debounce((localPlayer) => {
-        debugger;
         console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
-        let _localPlayer = { ...localPlayer };
-        setActivePlayer(_localPlayer);
-        delete _localPlayer._id;
-        // updadePlayer(_localActivePlayer);
+        if (playerHasChanged) {
+            // debugger;
+            let _localPlayer = { ...localPlayer };
+            setActivePlayer(_localPlayer);
+            delete _localPlayer._id;
+            // updadePlayer(_localPlayer);
+        }
 
         // cancelDebounce();
-    }, 10 * 1000);
+    }, 0.5 * 1000);
     // function debSave(player) {
     //     debSetScore();
     // }
@@ -333,6 +337,7 @@ function evaluation() {
     }
 
     const [playerHasChanged, setPlayerHasChanged] = useState(false);
+    const [journeyHasChanged, setJourneyHasChanged] = useState(false);
 
     return (
         check() && (
@@ -349,6 +354,7 @@ function evaluation() {
                             activeJourney={activeJourney}
                             journeys={journeys}
                             setActiveJourney={setActiveJourney}
+                            setJourneyHasChanged={setJourneyHasChanged}
                         ></JourneySelect>
                         <PlayerSelect
                             activePlayer={activePlayer}
@@ -392,6 +398,9 @@ function evaluation() {
                                                     }
                                                     activeJourney={
                                                         activeJourney.slug
+                                                    }
+                                                    journeyHasChanged={
+                                                        journeyHasChanged
                                                     }
                                                     title={heuristic.title}
                                                     description={

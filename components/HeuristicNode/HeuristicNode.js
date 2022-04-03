@@ -25,6 +25,7 @@ function HeuristicNode({
     activeJourney,
     playerHasChanged,
     setPlayerHasChanged,
+    journeyHasChanged,
     setNote,
     choice,
 }) {
@@ -76,13 +77,26 @@ function HeuristicNode({
             activePlayer.scores &&
             playerHasChanged
         ) {
-            console.log("mudou player aqui", activePlayer);
+            console.log("mudou player aqui", {
+                ...activePlayer.scores[activeJourney][slug],
+            });
             // setRangeValue(currentScore.score);
             // setNoteText(currentScore.note);
             // setValues({ ...activePlayer.scores[activeJourney][slug] });
+            let _scores = activePlayer.scores[activeJourney][slug];
             // debugger;
-            setValues({ ...activePlayer.scores[activeJourney][slug] });
-            setPlayerHasChanged(false);
+            setValues({
+                ...values,
+                score: Number(_scores.score),
+                note: _scores.note,
+            });
+            // setPlayerHasChanged(false);
+
+            console.log("VALORR", {
+                ...values,
+                score: Number(_scores.score),
+                note: _scores.note,
+            });
             // debounceFn(() => {
             // });
             // console.log("currentScore:", activePlayer[activeJourney].scores);
@@ -90,12 +104,41 @@ function HeuristicNode({
     }, [activePlayer]);
 
     useEffect(() => {
+        // debugger;
         if (hasChanged) {
             setScore(slug, { ...values });
+            setHasChanged(false);
         }
 
         // debouncedSaving();
     }, [values]);
+
+    useEffect(() => {
+        // debugger;
+        if (playerHasChanged) {
+            setScore(slug, { ...values });
+            setPlayerHasChanged(false);
+        }
+
+        // debouncedSaving();
+    }, [values]);
+
+    useEffect(() => {
+        if (journeyHasChanged) {
+            // debugger;
+            let _scores = activePlayer.scores[activeJourney][slug];
+            // debugger;
+            setValues({
+                ...values,
+                score: Number(_scores.score),
+                note: _scores.note,
+            });
+            setPlayerHasChanged(false);
+            setScore(slug, { ...values });
+        }
+
+        // debouncedSaving();
+    }, [activeJourney]);
 
     // useEffect(() => {
     //     // heuristicScore[slug] = rangeValue;

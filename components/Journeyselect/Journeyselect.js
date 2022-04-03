@@ -5,7 +5,12 @@ import Wave from "../Wave/Wave";
 
 import styles from "./Journeyselect.module.scss";
 
-function JourneySelect({ activeJourney, setActiveJourney, journeys }) {
+function JourneySelect({
+    activeJourney,
+    setActiveJourney,
+    journeys,
+    setJourneyHasChanged,
+}) {
     // const [listOpen, setListOpen] = useState(false);
 
     const dropdownRef = useRef(null);
@@ -17,6 +22,7 @@ function JourneySelect({ activeJourney, setActiveJourney, journeys }) {
 
     function handleSelectJourney(journey) {
         setActiveJourney(journey);
+        setJourneyHasChanged(true);
         handleToggle();
     }
 

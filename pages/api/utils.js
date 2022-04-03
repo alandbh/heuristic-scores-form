@@ -4,8 +4,9 @@ function getStorageValue(key, defaultValue) {
     // getting stored value
     if (typeof window !== "undefined") {
         const saved = localStorage.getItem(key);
+        // debugger;
         const initial =
-            saved !== null && saved !== undefined
+            saved && saved !== "null" && saved !== "undefined" && saved !== "[]"
                 ? JSON.parse(saved)
                 : defaultValue;
         return initial;
