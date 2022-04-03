@@ -13,18 +13,18 @@ import debounce from "lodash.debounce";
 
 let count = 0;
 
-setInterval(() => {
-    count++;
+// setInterval(() => {
+//     count++;
 
-    if (typeof window !== "undefined") {
-        let _localActivePlayer = JSON.parse(
-            localStorage.getItem("localActivePlayer")
-        );
-        delete _localActivePlayer._id;
-        console.log("TEMPO SALVAR - ", _localActivePlayer);
-        updadePlayer(_localActivePlayer);
-    }
-}, 30 * 1000);
+//     if (typeof window !== "undefined") {
+//         let _localActivePlayer = JSON.parse(
+//             localStorage.getItem("localActivePlayer")
+//         );
+//         delete _localActivePlayer._id;
+//         console.log("TEMPO SALVAR - ", _localActivePlayer);
+//         updadePlayer(_localActivePlayer);
+//     }
+// }, 30 * 1000);
 
 // setInterval()
 
@@ -259,12 +259,12 @@ function evaluation() {
     let debCount = 0;
     const debSetScore = debounce((localPlayer) => {
         console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
+        let _localPlayer = { ...localPlayer };
+        delete _localPlayer._id;
+        updadePlayer(_localPlayer);
         if (playerHasChanged) {
             // debugger;
-            let _localPlayer = { ...localPlayer };
             setActivePlayer(_localPlayer);
-            delete _localPlayer._id;
-            // updadePlayer(_localPlayer);
         }
 
         // cancelDebounce();
