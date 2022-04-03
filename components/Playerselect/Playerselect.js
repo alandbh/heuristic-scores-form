@@ -5,7 +5,12 @@ import styles from "./Playerselect.module.scss";
 import { useDetectOutsideClick } from "../../services/useDetectOutsideClick";
 import Wave from "../Wave/Wave";
 
-function PlayerSelect({ activePlayer, setActivePlayer, players }) {
+function PlayerSelect({
+    activePlayer,
+    setActivePlayer,
+    players,
+    setPlayerHasChanged,
+}) {
     // const [listOpen, setListOpen] = useState(false);
 
     const dropdownRef = useRef(null);
@@ -17,6 +22,7 @@ function PlayerSelect({ activePlayer, setActivePlayer, players }) {
 
     function handleSelectPlayer(player) {
         setActivePlayer(player);
+        setPlayerHasChanged(true);
         handleToggle();
     }
 

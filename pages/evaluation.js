@@ -13,18 +13,18 @@ import debounce from "lodash.debounce";
 
 let count = 0;
 
-setInterval(() => {
-    count++;
+// setInterval(() => {
+//     count++;
 
-    if (typeof window !== "undefined") {
-        let _localActivePlayer = JSON.parse(
-            localStorage.getItem("localActivePlayer")
-        );
-        delete _localActivePlayer._id;
-        console.log("TEMPO SALVAR - ", _localActivePlayer);
-        updadePlayer(_localActivePlayer);
-    }
-}, 30 * 1000);
+//     if (typeof window !== "undefined") {
+//         let _localActivePlayer = JSON.parse(
+//             localStorage.getItem("localActivePlayer")
+//         );
+//         delete _localActivePlayer._id;
+//         console.log("TEMPO SALVAR - ", _localActivePlayer);
+//         updadePlayer(_localActivePlayer);
+//     }
+// }, 30 * 1000);
 
 // setInterval()
 
@@ -242,9 +242,35 @@ function evaluation() {
      */
     let updatedActivePlayer;
 
-    const memoSetHeuristicScore = useCallback((hSlug, values) => {
+    // const memoSetHeuristicScore = useCallback((hSlug, values) => {
+    // });
+
+    const memoSetHeuristicScore = debounce((hSlug, values) => {
+        console.log("MEMO FORA AQUI", count++);
         setHeuristicScore(hSlug, values);
-    });
+    }, 1000);
+
+    if (count > 0) {
+        // memoSetHeuristicScore.cancel();
+    }
+
+    let debCount = 0;
+    const debSetScore = debounce((localPlayer) => {
+        debugger;
+        console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
+        let _localPlayer = { ...localPlayer };
+        setActivePlayer(_localPlayer);
+        delete _localPlayer._id;
+        // updadePlayer(_localActivePlayer);
+
+        // cancelDebounce();
+    }, 10 * 1000);
+    // function debSave(player) {
+    //     debSetScore();
+    // }
+    if (debCount > 0) {
+        // debSetScore.cancel();
+    }
 
     function setHeuristicScore(hSlug, values) {
         console.log("SETANDO SCORE", hSlug, values);
@@ -270,6 +296,9 @@ function evaluation() {
             // localActivePlayer = { ...updatedActivePlayer };
 
             setLocalActivePlayer({ ...updatedActivePlayer });
+
+            // debSave(updatedActivePlayer);
+            debSetScore(updatedActivePlayer);
 
             // loadedData.activePlayer = true;
             // setLoadedData((loadedData.activePlayer = true));
@@ -303,6 +332,8 @@ function evaluation() {
         }
     }
 
+    const [playerHasChanged, setPlayerHasChanged] = useState(false);
+
     return (
         check() && (
             <div>
@@ -323,6 +354,7 @@ function evaluation() {
                             activePlayer={activePlayer}
                             players={players}
                             setActivePlayer={setActivePlayer}
+                            setPlayerHasChanged={setPlayerHasChanged}
                         ></PlayerSelect>
                     </Header>
                 ) : (
@@ -352,6 +384,12 @@ function evaluation() {
                                                 <HeuristicNode
                                                     key={index}
                                                     slug={heuristic.slug}
+                                                    playerHasChanged={
+                                                        playerHasChanged
+                                                    }
+                                                    setPlayerHasChanged={
+                                                        setPlayerHasChanged
+                                                    }
                                                     activeJourney={
                                                         activeJourney.slug
                                                     }

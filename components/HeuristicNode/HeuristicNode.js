@@ -23,6 +23,8 @@ function HeuristicNode({
     currentScore,
     activePlayer,
     activeJourney,
+    playerHasChanged,
+    setPlayerHasChanged,
     setNote,
     choice,
 }) {
@@ -30,15 +32,8 @@ function HeuristicNode({
     const [noteText, setNoteText] = useState("");
     const [changed, setChanged] = useState(false);
     const [values, setValues] = useState({ score: 2, note: "n" });
+    const [hasChanged, setHasChanged] = useState(false);
 
-    const heuristicScore = {};
-
-    const debouncedSaving = useCallback(
-        debounce(() => {
-            console.log("debounced  salvar agora!!!");
-        }, 500),
-        []
-    );
     const debounceFn = useCallback(
         debounce((func) => {
             console.log("DEBOU");
@@ -47,20 +42,15 @@ function HeuristicNode({
         []
     );
 
-    function setHeuristicScore(value) {
-        setRangeValue(value);
-        setScore(slug, rangeValue, noteText);
-    }
-
     // Getting Current Score from DB
 
     useEffect(() => {
         // debugger;
-        if (activePlayer[activeJourney]) {
+        if (activePlayer && activeJourney) {
             // setRangeValue(currentScore.score);
             // setNoteText(currentScore.note);
             setValues({ ...activePlayer.scores[activeJourney][slug] });
-            console.log("currentScore:", activePlayer[activeJourney].scores);
+            // console.log("currentScore:", activePlayer[activeJourney].scores);
         }
     }, []);
 
@@ -80,12 +70,19 @@ function HeuristicNode({
     useEffect(() => {
         console.log("mudou activeJourney aqui", activeJourney);
         // debugger;
-        if (activePlayer && activeJourney !== null) {
+        if (
+            activePlayer &&
+            activeJourney !== null &&
+            activePlayer.scores &&
+            playerHasChanged
+        ) {
             console.log("mudou player aqui", activePlayer);
             // setRangeValue(currentScore.score);
             // setNoteText(currentScore.note);
             // setValues({ ...activePlayer.scores[activeJourney][slug] });
+            // debugger;
             setValues({ ...activePlayer.scores[activeJourney][slug] });
+            setPlayerHasChanged(false);
             // debounceFn(() => {
             // });
             // console.log("currentScore:", activePlayer[activeJourney].scores);
@@ -93,7 +90,9 @@ function HeuristicNode({
     }, [activePlayer]);
 
     useEffect(() => {
-        setScore(slug, { ...values });
+        if (hasChanged) {
+            setScore(slug, { ...values });
+        }
 
         // debouncedSaving();
     }, [values]);
@@ -105,7 +104,14 @@ function HeuristicNode({
     // }, [noteText]);
 
     function handleChangeRange(ev) {
+        setHasChanged(true);
         setValues({ ...values, score: ev.target.value });
+
+        // console.log("salvar agora!!!");
+    }
+    function handleChangeNote(ev) {
+        setHasChanged(true);
+        setValues({ ...values, note: ev.target.value });
 
         // console.log("salvar agora!!!");
     }
@@ -143,9 +149,7 @@ function HeuristicNode({
 
                 <div className="noteContainer">
                     <textarea
-                        onChange={(ev) =>
-                            setValues({ ...values, note: ev.target.value })
-                        }
+                        onChange={(ev) => handleChangeNote(ev)}
                         value={values.note}
                     ></textarea>
                 </div>
