@@ -36,14 +36,14 @@ function HeuristicNode({
     const debouncedSaving = useCallback(
         debounce(() => {
             console.log("debounced  salvar agora!!!");
-        }, 2000),
+        }, 500),
         []
     );
     const debounceFn = useCallback(
         debounce((func) => {
             console.log("DEBOU");
             func();
-        }, 4000),
+        }, 500),
         []
     );
 

@@ -24,7 +24,7 @@ setInterval(() => {
         console.log("TEMPO SALVAR - ", _localActivePlayer);
         updadePlayer(_localActivePlayer);
     }
-}, 10 * 1000);
+}, 30 * 1000);
 
 // setInterval()
 
@@ -43,11 +43,13 @@ function getPlayersFromJourney(journey, allPlayers) {
 
 function getHeuristicsFromJourney(journey, allHeuristics) {
     if (journey && allHeuristics.length > 0) {
-        return journey.heuristics.map((hSlug) => {
+        const unsortedHeuristics = journey.heuristics.map((hSlug) => {
             return allHeuristics.filter(
                 (heuristic) => heuristic.slug === hSlug
             )[0];
         });
+
+        return orderBy(unsortedHeuristics, "slug");
     }
 }
 
@@ -110,6 +112,20 @@ function evaluation() {
     });
 
     const [localActivePlayer, setLocalActivePlayer] = useState({});
+
+    // setInterval(() => {
+    //     count++;
+
+    //     if (typeof window !== "undefined") {
+    //         let _localActivePlayer = JSON.parse(
+    //             localStorage.getItem("localActivePlayer")
+    //         );
+    //         delete _localActivePlayer._id;
+    //         console.log("TEMPO SALVAR - DENTROO", count);
+    //         //updadePlayer(_localActivePlayer);
+    //     }
+    // }, 30 * 1000);
+
     /**
      *
      * Fetching All Data From Database
@@ -148,7 +164,7 @@ function evaluation() {
 
                 console.log("DEBOUUU222");
             }
-        }, 2000),
+        }, 500),
 
         [journeys]
     );
@@ -166,8 +182,10 @@ function evaluation() {
 
     // Setting Heuristic Groups
     useEffect(() => {
-        setGroups(getHeuristcGroups(allHeuristics));
-    }, [allHeuristics, activePlayer]);
+        if (heuristics !== undefined) {
+            setGroups(getHeuristcGroups(heuristics));
+        }
+    }, [heuristics]);
 
     /**
      *
@@ -204,7 +222,7 @@ function evaluation() {
                 console.log("PRIMEIRO PLAYER", activePlayer);
                 setActivePlayer(players[0]);
             }
-        }, 2000),
+        }, 500),
         [players]
     );
     // useEffect(() => {
@@ -223,6 +241,10 @@ function evaluation() {
      * @param {string} note
      */
     let updatedActivePlayer;
+
+    const memoSetHeuristicScore = useCallback((hSlug, values) => {
+        setHeuristicScore(hSlug, values);
+    });
 
     function setHeuristicScore(hSlug, values) {
         console.log("SETANDO SCORE", hSlug, values);
@@ -267,8 +289,18 @@ function evaluation() {
     }, [journeys]);
 
     function check() {
-        console.log("CARREGOU");
-        return loadedData && groups !== undefined && groups !== null;
+        if (
+            loadedData &&
+            groups !== undefined &&
+            groups !== null &&
+            activeJourney !== null &&
+            activePlayer !== null
+        ) {
+            console.log("CARREGOU");
+            return true;
+        } else {
+            return false;
+        }
     }
 
     return (
@@ -329,7 +361,7 @@ function evaluation() {
                                                     }
                                                     activePlayer={activePlayer}
                                                     setScore={(slug, values) =>
-                                                        setHeuristicScore(
+                                                        memoSetHeuristicScore(
                                                             slug,
                                                             values
                                                         )
