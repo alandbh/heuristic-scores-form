@@ -7,6 +7,7 @@ import throttle from "lodash.throttle";
 // import { Container } from './styles';
 
 const textScores = {
+    0: "0 - Not evaluated",
     1: "1 - Strongly Disagree",
     2: "2 - Disagree",
     3: "3 - Neutral",
@@ -170,7 +171,7 @@ function HeuristicNode({
                     {type === "scale" ? (
                         <Range
                             type={"range"}
-                            min={1}
+                            min={0}
                             max={5}
                             value={values.score}
                             onChange={(ev) => handleChangeRange(ev)}
@@ -181,7 +182,7 @@ function HeuristicNode({
                         </select>
                     )}
                     <span className="sliderValue">
-                        {textScores[rangeValue]}
+                        {textScores[values.score]}
                     </span>
                 </div>
 

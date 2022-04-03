@@ -2,14 +2,14 @@ import React from "react";
 
 // import { Container } from './styles';
 
-function Sectionheader({ group, localActivePlayer, index, activeJourney }) {
+function Sectionheader({ group, activePlayer, index, activeJourney }) {
     const totalScale =
         group.heuristics.filter((heuristic) => heuristic.type === "scale")
             .length * 5;
     // debugger;
     const HeuSlugs = group.heuristics.map((heuristic) => heuristic.slug);
-    const playerScores = localActivePlayer.hasOwnProperty("scores")
-        ? localActivePlayer.scores[activeJourney.slug]
+    const playerScores = activePlayer.hasOwnProperty("scores")
+        ? activePlayer.scores[activeJourney.slug]
         : {};
 
     const scoresArray = HeuSlugs.map((slug) => playerScores[slug].score);
@@ -18,9 +18,9 @@ function Sectionheader({ group, localActivePlayer, index, activeJourney }) {
         return Number(item) + Number(acc);
     }, 0);
 
-    console.log("HeuSlugs", HeuSlugs);
-    console.log("playerScores", playerScores);
-    console.log("scoresArray", scoresArray);
+    // console.log("HeuSlugs", HeuSlugs);
+    // console.log("playerScores", playerScores);
+    // console.log("scoresArray", scoresArray);
 
     return (
         <div className="grid gap-5 grid-cols-6">

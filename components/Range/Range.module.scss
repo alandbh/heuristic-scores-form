@@ -5,6 +5,7 @@
     position: relative;
     height: 50px;
     display: flex;
+    position: relative;
 
     input {
         appearance: none;
@@ -45,6 +46,18 @@
             background: $blue;
             border-radius: 100%;
             cursor: pointer;
+        }
+    }
+
+    &.inputDisable {
+        input {
+            &::-webkit-slider-thumb {
+                background: lightgray;
+            }
+
+            &::-moz-range-thumb {
+                background: lightgray;
+            }
         }
     }
 

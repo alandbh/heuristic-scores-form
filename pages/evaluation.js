@@ -381,9 +381,7 @@ function evaluation() {
                                         <Sectionheader
                                             index={index}
                                             group={group}
-                                            localActivePlayer={
-                                                localActivePlayer
-                                            }
+                                            activePlayer={activePlayer}
                                             activeJourney={activeJourney}
                                         ></Sectionheader>
 

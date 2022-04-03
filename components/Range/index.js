@@ -17,11 +17,25 @@ const Range = (props) => {
         container: {
             left: getPosition(props.min, props.max, props.value, 18),
         },
+        content: {
+            background: Number(props.value) === 0 ? "lightgrey" : "",
+        },
+    };
+
+    const inputStyle = {
+        background: Number(props.value) === 0 ? "lightgrey" : "",
     };
 
     return (
-        <div className={styles.container}>
+        <div
+            className={
+                Number(props.value) === 0
+                    ? styles.inputDisable + " " + styles.container
+                    : styles.container
+            }
+        >
             <input
+                style={inputStyle}
                 type={props.type}
                 min={props.min}
                 max={props.max}
