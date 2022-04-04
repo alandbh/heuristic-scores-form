@@ -398,50 +398,56 @@ function evaluation() {
                                             activeJourney={activeJourney}
                                         ></Sectionheader>
 
-                                        {group.heuristics
-                                            .filter((heuristic) =>
-                                                activeJourney.heuristics.includes(
-                                                    heuristic.slug
+                                        <div className={styles.sectionContent}>
+                                            {group.heuristics
+                                                .filter((heuristic) =>
+                                                    activeJourney.heuristics.includes(
+                                                        heuristic.slug
+                                                    )
                                                 )
-                                            )
-                                            .map((heuristic, index) => {
-                                                // debugger;
+                                                .map((heuristic, index) => {
+                                                    // debugger;
 
-                                                return (
-                                                    <HeuristicNode
-                                                        key={index}
-                                                        slug={heuristic.slug}
-                                                        playerHasChanged={
-                                                            playerHasChanged
-                                                        }
-                                                        setPlayerHasChanged={
-                                                            setPlayerHasChanged
-                                                        }
-                                                        activeJourney={
-                                                            activeJourney.slug
-                                                        }
-                                                        journeyHasChanged={
-                                                            journeyHasChanged
-                                                        }
-                                                        title={heuristic.title}
-                                                        description={
-                                                            heuristic.description
-                                                        }
-                                                        activePlayer={
-                                                            activePlayer
-                                                        }
-                                                        setScore={(
-                                                            slug,
-                                                            values
-                                                        ) =>
-                                                            memoSetHeuristicScore(
+                                                    return (
+                                                        <HeuristicNode
+                                                            key={index}
+                                                            slug={
+                                                                heuristic.slug
+                                                            }
+                                                            playerHasChanged={
+                                                                playerHasChanged
+                                                            }
+                                                            setPlayerHasChanged={
+                                                                setPlayerHasChanged
+                                                            }
+                                                            activeJourney={
+                                                                activeJourney.slug
+                                                            }
+                                                            journeyHasChanged={
+                                                                journeyHasChanged
+                                                            }
+                                                            title={
+                                                                heuristic.title
+                                                            }
+                                                            description={
+                                                                heuristic.description
+                                                            }
+                                                            activePlayer={
+                                                                activePlayer
+                                                            }
+                                                            setScore={(
                                                                 slug,
                                                                 values
-                                                            )
-                                                        }
-                                                    />
-                                                );
-                                            })}
+                                                            ) =>
+                                                                memoSetHeuristicScore(
+                                                                    slug,
+                                                                    values
+                                                                )
+                                                            }
+                                                        />
+                                                    );
+                                                })}
+                                        </div>
                                     </section>
                                 );
                             })

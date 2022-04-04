@@ -25,3 +25,70 @@
         top: 0;
     }
 }
+
+.stats {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.percent {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    // background: pink;
+    z-index: 1;
+    margin-left: 2rem;
+
+    h2 {
+        color: #aaa;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        font-size: 0.72rem;
+        font-weight: bold;
+        text-align: center;
+        transform: translateY(-50%);
+        transition: all 0.3s;
+    }
+
+    svg {
+        width: 60px;
+        height: 60px;
+        z-index: 2;
+        transform: rotate(-90deg);
+
+        circle {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: lightgray;
+            stroke-width: 4;
+            stroke-linecap: round;
+            transform: translate(2px, 2px);
+            transition: all 0.5s ease;
+
+            &:nth-child(2) {
+                stroke: $lightblue;
+                // We can specify the size of each dash in svg path.
+                // The whole circle perimeter is 440 (2*Pi*r or 2*3.14*70)
+                // So, the half of the circle is 220
+                stroke-dasharray: 175.92px;
+
+                // Defines the location along an SVG path where the dash of a stroke will begin
+                // We can move the dash away by adding some value in dashoffset property
+                // Adding 220px on it, move the dash to the other side of the circle
+                // This is the property we need to change in order to see amount of "filled" chart.
+
+                stroke-dashoffset: 175.92px;
+
+                // Starting at Zero
+                stroke-dasharray: 175.92px;
+
+                // if you want 85%
+                // stroke-dashoffset: calc(175.92px - (175.92px * 85 / 100));
+            }
+        }
+    }
+}
