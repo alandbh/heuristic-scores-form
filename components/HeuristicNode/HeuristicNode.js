@@ -3,6 +3,7 @@ import Image from "next/image";
 import Range from "../Range";
 import debounce from "lodash.debounce";
 import throttle from "lodash.throttle";
+import styles from "./HeuristicNode.module.scss";
 
 // import { Container } from './styles';
 
@@ -160,14 +161,22 @@ function HeuristicNode({
         // console.log("salvar agora!!!");
     }
 
+    const [textBoxOpen, setTextBoxOpen] = useState(false);
+
+    function handleClickAddNote() {
+        setTextBoxOpen(!textBoxOpen);
+    }
+
     return (
-        <div className="heuristicWrapper">
-            <span className="number">{slug}</span>
-            <div className="heuristicContainer">
+        <div className={styles.wrapper}>
+            <span className={styles.number}>
+                {slug.substr(2).replace("_", ".")}
+            </span>
+            <div className={styles.container}>
                 <h2>{title}</h2>
                 <p>{description}</p>
 
-                <div className="sliderWrapper">
+                <div className={styles.rangeWrapper}>
                     {type === "scale" ? (
                         <Range
                             type={"range"}
@@ -181,17 +190,24 @@ function HeuristicNode({
                             <option>TBD</option>
                         </select>
                     )}
-                    <span className="sliderValue">
+                    <span className={styles.rangeValue}>
                         {textScores[values.score]}
                     </span>
                 </div>
 
-                <button>
-                    <Image src="/icon-addnote.svg" width="20" height="22" /> Add
-                    Note
+                <button
+                    onClick={handleClickAddNote}
+                    className={styles.btnAddNote}
+                >
+                    <Image src="/icon-addnote.svg" width="20" height="22" />
+                    <b>{textBoxOpen ? "Close Text Box" : "Add Note"}</b>
                 </button>
 
-                <div className="noteContainer">
+                <div
+                    className={`${styles.textAreaContainer} ${
+                        textBoxOpen ? styles.textBoxOpen : ""
+                    }`}
+                >
                     <textarea
                         onChange={(ev) => handleChangeNote(ev)}
                         value={values.note}
