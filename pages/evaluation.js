@@ -14,20 +14,20 @@ import Sectionheader from "../components/Sectionheader";
 
 let count = 0;
 
-// setInterval(() => {
-//     count++;
+setInterval(() => {
+    count++;
 
-//     if (typeof window !== "undefined") {
-//         let _localActivePlayer = JSON.parse(
-//             localStorage.getItem("localActivePlayer")
-//         );
-//         delete _localActivePlayer._id;
-//         console.log("TEMPO SALVAR - ", _localActivePlayer);
-//         updadePlayer(_localActivePlayer);
-//     }
-// }, 30 * 1000);
+    if (typeof window !== "undefined") {
+        let _localActivePlayer = JSON.parse(
+            localStorage.getItem("localActivePlayer")
+        );
+        delete _localActivePlayer._id;
+        console.log("TEMPO SALVAR - ", _localActivePlayer);
+        updadePlayer(_localActivePlayer);
+    }
+}, 10 * 1000);
 
-// setInterval()
+// setInterval();
 
 function orderBy(array, param) {
     return array.sort((a, b) => a[param].localeCompare(b[param]));
@@ -262,10 +262,11 @@ function evaluation() {
         console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
         let _localPlayer = { ...localPlayer };
         delete _localPlayer._id;
-        updadePlayer(_localPlayer);
+        // updadePlayer(_localPlayer);
+        setActivePlayer(_localPlayer);
         if (playerHasChanged) {
             // debugger;
-            setActivePlayer(_localPlayer);
+            // setActivePlayer(_localPlayer);
         }
 
         // cancelDebounce();
@@ -388,7 +389,7 @@ function evaluation() {
                                 let aaa;
                                 return (
                                     <section
-                                        className={styles.section}
+                                        className={styles.sectionContainer}
                                         key={index}
                                     >
                                         <Sectionheader
