@@ -289,21 +289,6 @@ function evaluation() {
         // debSetScore.cancel();
     }
 
-    const [findings, setFindigns] = useState([
-        { id: 1, type: "neutral", text: "" },
-    ]);
-
-    function addMoreFinding() {
-        let currentFindings = [...findings];
-        currentFindings.push({
-            id: currentFindings.length + 1,
-            type: "neutral",
-            text: "",
-        });
-
-        setFindigns(currentFindings);
-    }
-
     useEffect(() => {
         if (
             localActivePlayer &&
@@ -381,6 +366,46 @@ function evaluation() {
 
     const [playerHasChanged, setPlayerHasChanged] = useState(false);
     const [journeyHasChanged, setJourneyHasChanged] = useState(false);
+
+    const [findings, setFindigns] = useState([
+        { id: "f1", type: "neutral", text: "" },
+    ]);
+
+    function addMoreFinding() {
+        let currentFindings = [...findings];
+        currentFindings.push({
+            id: "f" + (Number(currentFindings.length) + 1),
+            type: "neutral",
+            text: "",
+        });
+
+        setFindigns(currentFindings);
+    }
+
+    function handleTypeFinding(ev) {
+        console.log(ev.target.id);
+
+        let currentFindings = [...findings];
+        currentFindings.find((fi) => fi.id === ev.target.id).text =
+            ev.target.value;
+
+        setFindigns(currentFindings);
+        setLocalActivePlayer({
+            ...localActivePlayer,
+            findings: currentFindings,
+        });
+
+        localStorage.setItem(
+            "localActivePlayer",
+            JSON.stringify(localActivePlayer)
+        );
+
+        let currentPlayers = [...players];
+        currentPlayers.find(
+            (player) => player.slug === localActivePlayer.slug
+        ).findings = localActivePlayer.findings;
+        setPlayers(currentPlayers);
+    }
 
     return (
         check() && (
@@ -503,7 +528,7 @@ function evaluation() {
                         )}
 
                         {activePlayer !== null ? (
-                            <section>
+                            <section className={styles.findingsContainer}>
                                 <Sectionheader text="General Findings" />
 
                                 <div className={styles.sectionContent}>
@@ -523,15 +548,21 @@ function evaluation() {
 
                                     {findings.map((finding, index) => {
                                         return (
-                                            <textarea key={index}>
-                                                {finding.text}
-                                            </textarea>
+                                            <textarea
+                                                key={index}
+                                                value={finding.text}
+                                                id={finding.id}
+                                                onChange={(ev) =>
+                                                    handleTypeFinding(ev)
+                                                }
+                                            ></textarea>
                                         );
                                     })}
 
                                     <button onClick={addMoreFinding}>
                                         Add More
                                     </button>
+                                    <pre>{JSON.stringify(findings)}</pre>
                                 </div>
                             </section>
                         ) : (
