@@ -2,7 +2,13 @@ import React from "react";
 import styles from "./CommentBox.module.scss";
 // import { Container } from './styles';
 
-function CommentBox({ index, finding, handleTextFinding, handleTypeFinding }) {
+function CommentBox({
+    index,
+    finding,
+    handleTextFinding,
+    handleTypeFinding,
+    activePlayer,
+}) {
     function onChangeValue(ev) {
         console.log("RADIO", ev.target.value);
         handleTypeFinding(finding.id, ev.target.value);
@@ -13,8 +19,8 @@ function CommentBox({ index, finding, handleTextFinding, handleTypeFinding }) {
             <textarea
                 key={index}
                 value={finding.text}
-                id={finding.id}
-                onChange={(ev) => handleTextFinding(ev)}
+                id={activePlayer.slug + finding.id}
+                onChange={(ev) => handleTextFinding(ev, activePlayer)}
                 className={styles[finding.type]}
             ></textarea>
             <div className={styles.radioContainer}>
