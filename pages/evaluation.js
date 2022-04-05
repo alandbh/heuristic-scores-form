@@ -1,5 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Evaluation.module.scss";
+import Image from "next/image";
 import getData from "../services/getData";
 import { useEffect, useState, useCallback } from "react";
 import { useLocalStorage, updadePlayer } from "./api/utils";
@@ -355,9 +356,35 @@ function evaluation() {
     const [playerHasChanged, setPlayerHasChanged] = useState(false);
     const [journeyHasChanged, setJourneyHasChanged] = useState(false);
 
-    const [findings, setFindigns] = useState([
-        { id: "f1", type: "neutral", text: "" },
-    ]);
+    const [findings, setFindigns] = useState([]);
+
+    useEffect(
+        debounce(() => {
+            if (
+                activePlayer !== null &&
+                activePlayer.hasOwnProperty("findings")
+            ) {
+                // setFindigns([...activePlayer.findings]);
+
+                if (activePlayer.findings.length === 0) {
+                    setFindigns([
+                        { id: "f1", type: "neutral", text: "inicio" },
+                    ]);
+                } else {
+                    setFindigns([...activePlayer.findings]);
+                }
+                // if (activePlayer.findings.length > 0) {
+                //     console.log("SETANDO FIND", activePlayer.findings);
+                //     setFindigns([...activePlayer.findings]);
+                // } else {
+                //     console.log("FIND ATUAL", findings);
+
+                //     setFindigns([{ id: "f1", type: "neutral", text: "" }]);
+                // }
+            }
+        }, 500),
+        [activePlayer]
+    );
 
     function addMoreFinding() {
         let currentFindings = [...findings];
@@ -382,17 +409,22 @@ function evaluation() {
             ...localActivePlayer,
             findings: currentFindings,
         });
+        setActivePlayer({
+            ...activePlayer,
+            findings: currentFindings,
+        });
+        setPlayerHasChanged(true);
 
         localStorage.setItem(
             "localActivePlayer",
             JSON.stringify(localActivePlayer)
         );
 
-        // let currentPlayers = [...players];
-        // currentPlayers.find(
-        //     (player) => player.slug === localActivePlayer.slug
-        // ).findings = localActivePlayer.findings;
-        // setPlayers(currentPlayers);
+        let currentPlayers = [...players];
+        currentPlayers.find(
+            (player) => player.slug === localActivePlayer.slug
+        ).findings = localActivePlayer.findings;
+        setPlayers(currentPlayers);
     }
 
     function handleTypeFinding(id, value) {
@@ -404,17 +436,22 @@ function evaluation() {
             ...localActivePlayer,
             findings: currentFindings,
         });
+        setActivePlayer({
+            ...activePlayer,
+            findings: currentFindings,
+        });
+        setPlayerHasChanged(true);
 
         localStorage.setItem(
             "localActivePlayer",
             JSON.stringify(localActivePlayer)
         );
 
-        // let currentPlayers = [...players];
-        // currentPlayers.find(
-        //     (player) => player.slug === localActivePlayer.slug
-        // ).findings = localActivePlayer.findings;
-        // setPlayers(currentPlayers);
+        let currentPlayers = [...players];
+        currentPlayers.find(
+            (player) => player.slug === localActivePlayer.slug
+        ).findings = localActivePlayer.findings;
+        setPlayers(currentPlayers);
     }
 
     return (
@@ -573,10 +610,17 @@ function evaluation() {
                                         );
                                     })}
 
-                                    <button onClick={addMoreFinding}>
-                                        Add More
+                                    <button
+                                        className={styles.btnAddNote}
+                                        onClick={addMoreFinding}
+                                    >
+                                        <Image
+                                            src="/icon-addnote.svg"
+                                            width="20"
+                                            height="22"
+                                        />
+                                        <b>Add One More Finding</b>
                                     </button>
-                                    <pre>{JSON.stringify(findings)}</pre>
                                 </div>
                             </section>
                         ) : (
