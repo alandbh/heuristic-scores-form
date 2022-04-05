@@ -12,6 +12,7 @@ import React from "react";
 import debounce from "lodash.debounce";
 import GroupSectionheader from "../components/GroupSectionheader";
 import Sectionheader from "../components/Sectionheader";
+import CommentBox from "../components/CommentBox";
 
 let count = 0;
 
@@ -382,7 +383,7 @@ function evaluation() {
         setFindigns(currentFindings);
     }
 
-    function handleTypeFinding(ev) {
+    function handleTextFinding(ev) {
         console.log(ev.target.id);
 
         let currentFindings = [...findings];
@@ -400,11 +401,33 @@ function evaluation() {
             JSON.stringify(localActivePlayer)
         );
 
-        let currentPlayers = [...players];
-        currentPlayers.find(
-            (player) => player.slug === localActivePlayer.slug
-        ).findings = localActivePlayer.findings;
-        setPlayers(currentPlayers);
+        // let currentPlayers = [...players];
+        // currentPlayers.find(
+        //     (player) => player.slug === localActivePlayer.slug
+        // ).findings = localActivePlayer.findings;
+        // setPlayers(currentPlayers);
+    }
+
+    function handleTypeFinding(id, value) {
+        let currentFindings = [...findings];
+        currentFindings.find((fi) => fi.id === id).type = value;
+
+        setFindigns(currentFindings);
+        setLocalActivePlayer({
+            ...localActivePlayer,
+            findings: currentFindings,
+        });
+
+        localStorage.setItem(
+            "localActivePlayer",
+            JSON.stringify(localActivePlayer)
+        );
+
+        // let currentPlayers = [...players];
+        // currentPlayers.find(
+        //     (player) => player.slug === localActivePlayer.slug
+        // ).findings = localActivePlayer.findings;
+        // setPlayers(currentPlayers);
     }
 
     return (
@@ -548,14 +571,18 @@ function evaluation() {
 
                                     {findings.map((finding, index) => {
                                         return (
-                                            <textarea
-                                                key={index}
-                                                value={finding.text}
-                                                id={finding.id}
-                                                onChange={(ev) =>
-                                                    handleTypeFinding(ev)
-                                                }
-                                            ></textarea>
+                                            <>
+                                                <CommentBox
+                                                    index={index}
+                                                    finding={finding}
+                                                    handleTextFinding={
+                                                        handleTextFinding
+                                                    }
+                                                    handleTypeFinding={
+                                                        handleTypeFinding
+                                                    }
+                                                ></CommentBox>
+                                            </>
                                         );
                                     })}
 

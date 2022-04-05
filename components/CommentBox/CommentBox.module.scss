@@ -1,0 +1,91 @@
+@import "../../styles/components.scss";
+
+.container {
+    margin: 0.5rem 0 2.5rem;
+    align-items: end;
+    // display: flex;
+
+    .question {
+        font-size: 0.8rem;
+        margin-right: 1.5rem;
+        color: $grey;
+    }
+
+    textarea {
+        padding: 0.7rem;
+        font-size: 0.8rem;
+        display: block;
+        width: 100%;
+        border: 1px solid $lightgrey;
+
+        &.good {
+            border: 1px solid $green;
+        }
+        &.bad {
+            border: 1px solid $red;
+        }
+        &.neutral {
+            border: 1px solid $blue;
+        }
+    }
+}
+.radioContainer {
+    display: flex;
+    padding: 0.5rem 0;
+    label {
+        display: flex;
+        align-items: center;
+        margin-right: 1.5rem;
+        font-size: 0.8rem;
+        color: $grey;
+
+        input {
+            display: inline-block;
+            // width: 18px;
+            // height: 18px;
+            // border: 3px solid $blue;
+            margin-right: 0.3rem;
+
+            /* remove standard background appearance */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            /* create custom radiobutton appearance */
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            padding: 7px;
+            /* background-color only for content */
+            background-clip: content-box;
+            border: 2px solid $grey;
+            background-color: $grey;
+            border-radius: 50%;
+        }
+
+        input[type="radio"]:checked {
+            padding: 2px;
+        }
+
+        &.good {
+            color: $green;
+            input[type="radio"]:checked {
+                background-color: $green;
+                border: 2px solid $green;
+            }
+        }
+        &.bad {
+            color: $red;
+            input[type="radio"]:checked {
+                background-color: $red;
+                border: 2px solid $red;
+            }
+        }
+        &.neutral {
+            color: $blue;
+            input[type="radio"]:checked {
+                background-color: $blue;
+                border: 2px solid $blue;
+            }
+        }
+    }
+}
