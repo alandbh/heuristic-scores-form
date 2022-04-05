@@ -182,7 +182,7 @@ function evaluation() {
             }
         }, 500),
 
-        [journeys, allHeuristics]
+        [journeys, allHeuristics, activeJourney]
     );
 
     /**
@@ -219,6 +219,8 @@ function evaluation() {
             );
             // debugger;
             setPlayers(playersFromJourney);
+            setActivePlayer(playersFromJourney[0]);
+            setLocalActivePlayer(playersFromJourney[0]);
             setPlayerHasChanged(true);
         }
         // loadedData.players = true;
@@ -228,13 +230,13 @@ function evaluation() {
 
     useEffect(
         debounce(() => {
-            console.log("ACTIVE PLAYER");
             if (players.length > 0) {
                 console.log("PRIMEIRO PLAYER", players[0]);
+                setActivePlayer({});
                 setActivePlayer(players[0]);
             }
         }, 500),
-        [players]
+        [players, activeJourney]
     );
     // useEffect(() => {
     //     if (players.length > 0) {
