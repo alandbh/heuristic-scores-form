@@ -88,15 +88,18 @@ const player1 = {
     findings: [
         {
             text: "Um comentário positivo aqui lorem imsum dolor sit amet",
-            is_positive: true,
+            type: "good",
+            id: "f1",
         },
         {
             text: "Outro comentário positivo aqui lorem imsum dolor sit amet",
-            is_positive: true,
+            type: "good",
+            id: "f2",
         },
         {
             text: "Um comentário NEGATIVO aqui lorem imsum dolor sit amet",
-            is_positive: false,
+            type: "bad",
+            id: "f3",
         },
     ],
 };
@@ -159,11 +162,13 @@ const player2 = {
     findings: [
         {
             text: "Um comentário positivo aqui lorem imsum dolor sit amet",
-            is_positive: true,
+            type: "good",
+            id: "f1",
         },
         {
             text: "Um comentário NEGATIVO aqui lorem imsum dolor sit amet",
-            is_positive: false,
+            type: "bad",
+            id: "f2",
         },
     ],
 };

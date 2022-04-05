@@ -97,6 +97,14 @@ function seed() {
         arr_players.map((player) => {
             player.scores[jornada.slug] = {};
 
+            if (player.findings.length === 0) {
+                player.findings.push({
+                    id: "f1",
+                    type: "neutral",
+                    text: "n/a",
+                });
+            }
+
             jornada.heuristics.map((heuristic) => {
                 player.scores[jornada.slug][heuristic] = {
                     score: 0,
