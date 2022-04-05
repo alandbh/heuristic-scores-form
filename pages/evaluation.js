@@ -10,6 +10,7 @@ import HeuristicNode from "../components/HeuristicNode/HeuristicNode";
 
 import React from "react";
 import debounce from "lodash.debounce";
+import GroupSectionheader from "../components/GroupSectionheader";
 import Sectionheader from "../components/Sectionheader";
 
 let count = 0;
@@ -288,6 +289,34 @@ function evaluation() {
         // debSetScore.cancel();
     }
 
+    const [findings, setFindigns] = useState([
+        { id: 1, type: "neutral", text: "" },
+    ]);
+
+    function addMoreFinding() {
+        let currentFindings = [...findings];
+        currentFindings.push({
+            id: currentFindings.length + 1,
+            type: "neutral",
+            text: "",
+        });
+
+        setFindigns(currentFindings);
+    }
+
+    useEffect(() => {
+        if (
+            localActivePlayer &&
+            localActivePlayer.findings !== undefined &&
+            localActivePlayer.findings.length > 0
+        ) {
+            let currentFindings = [...localActivePlayer.findings];
+
+            setFindigns(currentFindings);
+            console.log("FIND", findings);
+        }
+    }, [localActivePlayer]);
+
     function setHeuristicScore(hSlug, values) {
         console.log("SETANDO SCORE", hSlug, values);
         if (hSlug && values && activePlayer) {
@@ -399,72 +428,114 @@ function evaluation() {
                             groups[activeJourney.slug].map((group, index) => {
                                 let aaa;
                                 return (
-                                    <section
-                                        className={styles.sectionContainer}
-                                        key={index}
-                                    >
-                                        <Sectionheader
-                                            index={index}
-                                            group={group}
-                                            activePlayer={activePlayer}
-                                            activeJourney={activeJourney}
-                                        ></Sectionheader>
+                                    <>
+                                        <section
+                                            className={styles.sectionContainer}
+                                            key={index}
+                                        >
+                                            <GroupSectionheader
+                                                index={index}
+                                                group={group}
+                                                activePlayer={activePlayer}
+                                                activeJourney={activeJourney}
+                                            ></GroupSectionheader>
 
-                                        <div className={styles.sectionContent}>
-                                            {group.heuristics
-                                                .filter((heuristic) =>
-                                                    activeJourney.heuristics.includes(
-                                                        heuristic.slug
+                                            <div
+                                                className={
+                                                    styles.sectionContent
+                                                }
+                                            >
+                                                {group.heuristics
+                                                    .filter((heuristic) =>
+                                                        activeJourney.heuristics.includes(
+                                                            heuristic.slug
+                                                        )
                                                     )
-                                                )
-                                                .map((heuristic, index) => {
-                                                    // debugger;
+                                                    .map((heuristic, index) => {
+                                                        // debugger;
 
-                                                    return (
-                                                        <HeuristicNode
-                                                            key={index}
-                                                            slug={
-                                                                heuristic.slug
-                                                            }
-                                                            playerHasChanged={
-                                                                playerHasChanged
-                                                            }
-                                                            setPlayerHasChanged={
-                                                                setPlayerHasChanged
-                                                            }
-                                                            activeJourney={
-                                                                activeJourney.slug
-                                                            }
-                                                            journeyHasChanged={
-                                                                journeyHasChanged
-                                                            }
-                                                            title={
-                                                                heuristic.title
-                                                            }
-                                                            description={
-                                                                heuristic.description
-                                                            }
-                                                            activePlayer={
-                                                                activePlayer
-                                                            }
-                                                            setScore={(
-                                                                slug,
-                                                                values
-                                                            ) =>
-                                                                memoSetHeuristicScore(
+                                                        return (
+                                                            <HeuristicNode
+                                                                key={index}
+                                                                slug={
+                                                                    heuristic.slug
+                                                                }
+                                                                playerHasChanged={
+                                                                    playerHasChanged
+                                                                }
+                                                                setPlayerHasChanged={
+                                                                    setPlayerHasChanged
+                                                                }
+                                                                activeJourney={
+                                                                    activeJourney.slug
+                                                                }
+                                                                journeyHasChanged={
+                                                                    journeyHasChanged
+                                                                }
+                                                                title={
+                                                                    heuristic.title
+                                                                }
+                                                                description={
+                                                                    heuristic.description
+                                                                }
+                                                                activePlayer={
+                                                                    activePlayer
+                                                                }
+                                                                setScore={(
                                                                     slug,
                                                                     values
-                                                                )
-                                                            }
-                                                        />
-                                                    );
-                                                })}
-                                        </div>
-                                    </section>
+                                                                ) =>
+                                                                    memoSetHeuristicScore(
+                                                                        slug,
+                                                                        values
+                                                                    )
+                                                                }
+                                                            />
+                                                        );
+                                                    })}
+                                            </div>
+                                        </section>
+                                    </>
                                 );
                             })
                         ) : (
                             <div>Carregando</div>
+                        )}
+
+                        {activePlayer !== null ? (
+                            <section>
+                                <Sectionheader text="General Findings" />
+
+                                <div className={styles.sectionContent}>
+                                    <h2>
+                                        Some good or bad thing you want to
+                                        highlight
+                                    </h2>
+                                    <p>
+                                        This is a space for you to put some
+                                        useful findings regarding this player,
+                                        that are not described in none of the
+                                        heuristics above. It could be a good
+                                        thing (like this player allows credit
+                                        card scanning) or a bad one (the face
+                                        recognition does not work properly).
+                                    </p>
+
+                                    {findings.map((finding, index) => {
+                                        return (
+                                            <textarea key={index}>
+                                                {finding.text}
+                                            </textarea>
+                                        );
+                                    })}
+
+                                    <button onClick={addMoreFinding}>
+                                        Add More
+                                    </button>
+                                </div>
+                            </section>
+                        ) : (
+                            <div>Wait...</div>
                         )}
                     </div>
                     <div className="col-start-9 col-end-12">
