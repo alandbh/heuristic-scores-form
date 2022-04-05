@@ -290,19 +290,6 @@ function evaluation() {
         // debSetScore.cancel();
     }
 
-    useEffect(() => {
-        if (
-            localActivePlayer &&
-            localActivePlayer.findings !== undefined &&
-            localActivePlayer.findings.length > 0
-        ) {
-            let currentFindings = [...localActivePlayer.findings];
-
-            setFindigns(currentFindings);
-            console.log("FIND", findings);
-        }
-    }, [localActivePlayer]);
-
     function setHeuristicScore(hSlug, values) {
         console.log("SETANDO SCORE", hSlug, values);
         if (hSlug && values && activePlayer) {
