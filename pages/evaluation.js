@@ -14,6 +14,7 @@ import debounce from "lodash.debounce";
 import GroupSectionheader from "../components/GroupSectionheader";
 import Sectionheader from "../components/Sectionheader";
 import CommentBox from "../components/CommentBox";
+import { urlObjectKeys } from "next/dist/shared/lib/utils";
 
 let count = 0;
 
@@ -231,16 +232,16 @@ function evaluation() {
 
     // Selecting the FIRST PLAYER
 
-    useEffect(
-        debounce(() => {
-            if (players.length > 0) {
-                console.log("PRIMEIRO PLAYER", players[0]);
-                setActivePlayer({});
-                setActivePlayer(players[0]);
-            }
-        }, 500),
-        [players, activeJourney]
-    );
+    // useEffect(
+    //     debounce(() => {
+    //         if (players.length > 0) {
+    //             console.log("PRIMEIRO PLAYER", players[0]);
+    //             setActivePlayer({});
+    //             setActivePlayer(players[0]);
+    //         }
+    //     }, 500),
+    //     [players, activeJourney]
+    // );
     // useEffect(() => {
     //     if (players.length > 0) {
     //         console.log("PRIMEIRO PLAYER", activePlayer);
@@ -280,6 +281,7 @@ function evaluation() {
         if (playerHasChanged) {
             // debugger;
             setActivePlayer(_localPlayer);
+            // setActivePlayer(localActivePlayer);
         }
 
         // cancelDebounce();
@@ -299,6 +301,8 @@ function evaluation() {
                 score: values.score,
                 note: values.note,
             };
+
+            updatedActivePlayer.findings = localActivePlayer.findings;
 
             // setTimeout(() => {
             //     setActivePlayer({ ...updatedActivePlayer });
@@ -358,77 +362,132 @@ function evaluation() {
 
     const [findings, setFindigns] = useState([]);
 
-    useEffect(
-        debounce(() => {
-            if (
-                activePlayer !== null &&
-                activePlayer.hasOwnProperty("findings")
-            ) {
-                // setFindigns([...activePlayer.findings]);
+    // useEffect(
+    //     debounce(() => {
+    //         if (
+    //             activePlayer !== null &&
+    //             activePlayer.hasOwnProperty("findings")
+    //         ) {
+    //             setFindigns([...activePlayer.findings]);
 
-                if (activePlayer.findings.length === 0) {
-                    setFindigns([
-                        { id: "f1", type: "neutral", text: "inicio" },
-                    ]);
-                } else {
-                    setFindigns([...activePlayer.findings]);
-                }
-                // if (activePlayer.findings.length > 0) {
-                //     console.log("SETANDO FIND", activePlayer.findings);
-                //     setFindigns([...activePlayer.findings]);
-                // } else {
-                //     console.log("FIND ATUAL", findings);
+    //             // setFindigns([...activePlayer.findings]);
 
-                //     setFindigns([{ id: "f1", type: "neutral", text: "" }]);
-                // }
-            }
-        }, 500),
-        [activePlayer]
-    );
+    //             // if (activePlayer.findings.length === 0) {
+    //             //     setFindigns([
+    //             //         { id: "f1", type: "neutral", text: "inicio" },
+    //             //     ]);
+    //             // } else {
+    //             //     setFindigns([...activePlayer.findings]);
+    //             // }
+    //             // if (activePlayer.findings.length > 0) {
+    //             //     console.log("SETANDO FIND", activePlayer.findings);
+    //             //     setFindigns([...activePlayer.findings]);
+    //             // } else {
+    //             //     console.log("FIND ATUAL", findings);
+
+    //             //     setFindigns([{ id: "f1", type: "neutral", text: "" }]);
+    //             // }
+    //         }
+    //     }, 500),
+    //     []
+    // );
+
+    // useEffect(
+    //     debounce(() => {
+    //         debugger;
+    //         if (
+    //             activePlayer.hasOwnProperty("findings") &&
+    //             localActivePlayer.hasOwnProperty("findings")
+    //         ) {
+    //             if (activePlayer.findings[0].text === "n/a") {
+    //                 setFindigns([...activePlayer.findings]);
+    //             } else {
+    //                 setFindigns([...localActivePlayer.findings]);
+    //             }
+    //         }
+    //     }, 500),
+    //     [activePlayer]
+    // );
 
     function addMoreFinding() {
-        let currentFindings = [...findings];
-        currentFindings.push({
-            id: "f" + (Number(currentFindings.length) + 1),
+        let current = { ...activePlayer };
+        current.findings.push({
+            id: "f" + (Number(current.findings.length) + 1),
             type: "neutral",
-            text: "",
+            text: "f" + (Number(current.findings.length) + 1),
         });
 
-        setFindigns(currentFindings);
+        // setFindigns(currentFindings);
+        setLocalActivePlayer(current);
+
+        setPlayerHasChanged(true);
+
+        // let currentPlayers = [...players];
+        if (allPlayers && allPlayers.length > 0) {
+            let _players = [...allPlayers];
+
+            _players[_players.findIndex((item) => item.slug === current.slug)] =
+                current;
+            // let currentPlayer = _players.find(
+            //     (player) => player.slug === current.slug
+            // );
+            setAllPlayers(_players);
+            console.log("currentPlayers", _players);
+        }
     }
 
+    useEffect(() => {
+        console.log("PLAYER", activePlayer);
+        // setFindigns([...activePlayer.findings]);
+    }, [activePlayer]);
+
     function handleTextFinding(ev) {
-        console.log(ev.target.id);
+        let currentFindings = [...activePlayer.findings];
+        let thisFinding = currentFindings.find((fi) => fi.id === ev.target.id);
 
-        let currentFindings = [...findings];
-        currentFindings.find((fi) => fi.id === ev.target.id).text =
-            ev.target.value;
+        console.log(thisFinding);
+        // debugger;
+        thisFinding.text = ev.target.value;
 
-        setFindigns(currentFindings);
+        setFindigns([...activePlayer.findings, thisFinding]);
         setLocalActivePlayer({
             ...localActivePlayer,
             findings: currentFindings,
         });
-        setActivePlayer({
-            ...activePlayer,
-            findings: currentFindings,
-        });
-        setPlayerHasChanged(true);
+        // setActivePlayer({
+        //     ...activePlayer,
+        //     findings: currentFindings,
+        // });
+        // setPlayerHasChanged(true);
 
-        localStorage.setItem(
-            "localActivePlayer",
-            JSON.stringify(localActivePlayer)
-        );
+        // localStorage.setItem(
+        //     "localActivePlayer",
+        //     JSON.stringify(localActivePlayer)
+        // );
 
-        let currentPlayers = [...players];
-        currentPlayers.find(
-            (player) => player.slug === localActivePlayer.slug
-        ).findings = localActivePlayer.findings;
-        setPlayers(currentPlayers);
+        // setLocalActivePlayer({
+        //     ...localActivePlayer,
+        //     findings: currentFindings,
+        // });
+
+        // // debSave(updatedActivePlayer);
+        // debSetScore({
+        //     ...localActivePlayer,
+        //     findings: currentFindings,
+        // });
+
+        // setActivePlayer({ ...activePlayer, findings: currentFindings });
+
+        // let currentPlayers = [...players];
+        // currentPlayers.find(
+        //     (player) => player.slug === localActivePlayer.slug
+        // ).findings = currentFindings;
+        // setPlayers(currentPlayers);
+        // setPlayerHasChanged(false);
     }
 
     function handleTypeFinding(id, value) {
-        let currentFindings = [...findings];
+        let currentFindings = [...activePlayer.findings];
         currentFindings.find((fi) => fi.id === id).type = value;
 
         setFindigns(currentFindings);
@@ -436,22 +495,36 @@ function evaluation() {
             ...localActivePlayer,
             findings: currentFindings,
         });
-        setActivePlayer({
-            ...activePlayer,
-            findings: currentFindings,
-        });
-        setPlayerHasChanged(true);
+        // setActivePlayer({
+        //     ...activePlayer,
+        //     findings: currentFindings,
+        // });
+        // setPlayerHasChanged(true);
 
         localStorage.setItem(
             "localActivePlayer",
             JSON.stringify(localActivePlayer)
         );
 
-        let currentPlayers = [...players];
-        currentPlayers.find(
-            (player) => player.slug === localActivePlayer.slug
-        ).findings = localActivePlayer.findings;
-        setPlayers(currentPlayers);
+        setLocalActivePlayer({
+            ...localActivePlayer,
+            findings: currentFindings,
+        });
+
+        // debSave(updatedActivePlayer);
+        debSetScore({
+            ...localActivePlayer,
+            findings: currentFindings,
+        });
+
+        // setActivePlayer({ ...activePlayer, findings: currentFindings });
+
+        // let currentPlayers = [...players];
+        // currentPlayers.find(
+        //     (player) => player.slug === localActivePlayer.slug
+        // ).findings = currentFindings;
+        // setPlayers(currentPlayers);
+        // setPlayerHasChanged(false);
     }
 
     return (
@@ -574,7 +647,8 @@ function evaluation() {
                             <div>Carregando</div>
                         )}
 
-                        {activePlayer !== null ? (
+                        {localActivePlayer !== null &&
+                        localActivePlayer.hasOwnProperty("findings") ? (
                             <section className={styles.findingsContainer}>
                                 <Sectionheader text="General Findings" />
 
@@ -593,22 +667,28 @@ function evaluation() {
                                         recognition does not work properly).
                                     </p>
 
-                                    {findings.map((finding, index) => {
-                                        return (
-                                            <>
-                                                <CommentBox
-                                                    index={index}
-                                                    finding={finding}
-                                                    handleTextFinding={
-                                                        handleTextFinding
-                                                    }
-                                                    handleTypeFinding={
-                                                        handleTypeFinding
-                                                    }
-                                                ></CommentBox>
-                                            </>
-                                        );
-                                    })}
+                                    {allPlayers
+                                        .find(
+                                            (player) =>
+                                                player.slug ===
+                                                activePlayer.slug
+                                        )
+                                        .findings.map((finding, index) => {
+                                            return (
+                                                <>
+                                                    <CommentBox
+                                                        index={index}
+                                                        finding={finding}
+                                                        handleTextFinding={
+                                                            handleTextFinding
+                                                        }
+                                                        handleTypeFinding={
+                                                            handleTypeFinding
+                                                        }
+                                                    ></CommentBox>
+                                                </>
+                                            );
+                                        })}
 
                                     <button
                                         className={styles.btnAddNote}
