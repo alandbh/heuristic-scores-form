@@ -9,21 +9,37 @@ function Sectionheader({ group, activePlayer, index, activeJourney }) {
         group.heuristics.filter((heuristic) => heuristic.type === "scale")
             .length * 5;
     // debugger;
-    const HeuSlugs = group.heuristics.map((heuristic) => heuristic.slug);
-    const playerScores = activePlayer.hasOwnProperty("scores")
-        ? activePlayer.scores[activeJourney.slug]
-        : {};
 
-    const scoresArray = HeuSlugs.map((slug) => playerScores[slug].score);
+    let sum = 0;
+    if (
+        activePlayer.hasOwnProperty("scores") &&
+        activeJourney.hasOwnProperty("slug") &&
+        group.hasOwnProperty("heuristics")
+    ) {
+        const HeuSlugs = group.heuristics.map((heuristic) => heuristic.slug);
+        const playerScores = activePlayer.hasOwnProperty("scores")
+            ? activePlayer.scores[activeJourney.slug]
+            : {};
 
-    const sum = scoresArray.reduce((item, acc) => {
-        return Number(item) + Number(acc);
-    }, 0);
+        // debugger;
+        // const scoresArray = HeuSlugs.map((slug) => playerScores.desktop.score);
+        console.log("ERRO AQUI playerScores", playerScores);
+        console.log("ERRO AQUI HeuSlugs", HeuSlugs);
+        const scoresArray =
+            playerScores !== undefined && HeuSlugs
+                ? HeuSlugs.map((slug) =>
+                      playerScores[slug] ? playerScores[slug].score : ""
+                  )
+                : [0];
 
-    // console.log("HeuSlugs", HeuSlugs);
-    // console.log("playerScores", playerScores);
-    // console.log("scoresArray", scoresArray);
+        sum = scoresArray.reduce((item, acc) => {
+            return Number(item) + Number(acc);
+        }, 0);
 
+        // console.log("HeuSlugs", HeuSlugs);
+        // console.log("playerScores", playerScores);
+        // console.log("scoresArray", scoresArray);
+    }
     const radius = 28;
     const circ = 2 * Math.PI * radius;
     const percent = (sum / totalScale) * 100;

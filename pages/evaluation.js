@@ -18,6 +18,7 @@ setInterval(() => {
     count++;
 
     if (typeof window !== "undefined") {
+        return;
         let _localActivePlayer = JSON.parse(
             localStorage.getItem("localActivePlayer")
         );
@@ -54,27 +55,6 @@ function getHeuristicsFromJourney(journey, allHeuristics) {
     }
 }
 
-function getHeuristcGroups(allHeuristics) {
-    if (allHeuristics.length > 0) {
-        const allGroups = allHeuristics.map((heuristic) => heuristic.group);
-        const uniqueGroups = [...new Set(allGroups)];
-
-        const groupsWithHeuristics = [];
-
-        uniqueGroups.map((group) => {
-            groupsWithHeuristics.push({
-                name: group,
-                heuristics: allHeuristics.filter(
-                    (heuristic) => heuristic.group === group
-                ),
-            });
-        });
-
-        return groupsWithHeuristics;
-    }
-
-    return [];
-}
 function objIsEmpty(obj) {
     return obj.constructor === Object && Object.keys(obj).length === 0;
 }
@@ -101,7 +81,7 @@ function evaluation() {
         []
     );
     const [heuristics, setHeuristics] = useLocalStorage("heuristics", []);
-    const [groups, setGroups] = useLocalStorage("groups", []);
+    const [groups, setGroups] = useLocalStorage("groups", null);
 
     const [loadedData, setLoadedData] = useState({
         journeys: false,
@@ -114,19 +94,6 @@ function evaluation() {
 
     const [localActivePlayer, setLocalActivePlayer] = useState({});
 
-    // setInterval(() => {
-    //     count++;
-
-    //     if (typeof window !== "undefined") {
-    //         let _localActivePlayer = JSON.parse(
-    //             localStorage.getItem("localActivePlayer")
-    //         );
-    //         delete _localActivePlayer._id;
-    //         console.log("TEMPO SALVAR - DENTROO", count);
-    //         //updadePlayer(_localActivePlayer);
-    //     }
-    // }, 30 * 1000);
-
     /**
      *
      * Fetching All Data From Database
@@ -135,7 +102,7 @@ function evaluation() {
         // All Journeys
 
         getData("journeys").then((data) => {
-            console.log("dentro", data);
+            // console.log("dentro", data);
             setJourneys(data);
             setLoadedData((loadedData.journeys = true));
             // loadedData.journeys = true;
@@ -159,15 +126,63 @@ function evaluation() {
     useEffect(
         debounce(() => {
             if (journeys.length > 0 && activeJourney === null) {
-                console.log("setando journey", journeys[0]);
+                // console.log("setando journey", journeys[0]);
                 setActiveJourney(journeys[0]);
                 // setLoadedData((loadedData.activeJourney = true));
 
-                console.log("DEBOUUU222");
+                // console.log("DEBOUUU222");
             }
         }, 500),
 
         [journeys]
+    );
+
+    /**
+     *
+     * GROUPS
+     */
+
+    useEffect(
+        debounce(() => {
+            if (
+                journeys &&
+                journeys.length > 0 &&
+                allHeuristics &&
+                allHeuristics.length > 0
+            ) {
+                let groups = {};
+
+                const allGroupNames = allHeuristics.map(
+                    (heuristic) => heuristic.group
+                );
+                const uniqueGroupNames = [...new Set(allGroupNames)];
+
+                journeys.map((journey) => {
+                    groups[journey.slug] = [];
+
+                    const journeyHeuristics = journey.heuristics.map(
+                        (heuSlug) => {
+                            return allHeuristics.filter(
+                                (heuristic) => heuristic.slug === heuSlug
+                            )[0];
+                        }
+                    );
+
+                    uniqueGroupNames.map((groupName) => {
+                        groups[journey.slug].push({
+                            name: groupName,
+                            heuristics: journeyHeuristics.filter(
+                                (heuristic) => heuristic.group === groupName
+                            ),
+                        });
+                    });
+                });
+                // console.log("setando GROUPS journey", groups);
+                setGroups(groups);
+            }
+        }, 500),
+
+        [journeys, allHeuristics]
     );
 
     /**
@@ -180,13 +195,6 @@ function evaluation() {
     useEffect(() => {
         setHeuristics(getHeuristicsFromJourney(activeJourney, allHeuristics));
     }, [activeJourney, allHeuristics]);
-
-    // Setting Heuristic Groups
-    useEffect(() => {
-        if (heuristics !== undefined) {
-            setGroups(getHeuristcGroups(heuristics));
-        }
-    }, [heuristics]);
 
     /**
      *
@@ -222,7 +230,7 @@ function evaluation() {
         debounce(() => {
             console.log("ACTIVE PLAYER");
             if (players.length > 0) {
-                console.log("PRIMEIRO PLAYER", activePlayer);
+                console.log("PRIMEIRO PLAYER", players[0]);
                 setActivePlayer(players[0]);
             }
         }, 500),
@@ -263,10 +271,10 @@ function evaluation() {
         let _localPlayer = { ...localPlayer };
         delete _localPlayer._id;
         // updadePlayer(_localPlayer);
-        setActivePlayer(_localPlayer);
+        // setActivePlayer(_localPlayer);
         if (playerHasChanged) {
             // debugger;
-            // setActivePlayer(_localPlayer);
+            setActivePlayer(_localPlayer);
         }
 
         // cancelDebounce();
@@ -326,13 +334,14 @@ function evaluation() {
     function check() {
         if (
             loadedData &&
-            groups !== undefined &&
+            groups &&
             groups !== null &&
             activeJourney !== undefined &&
             activeJourney !== null &&
             activePlayer !== null
         ) {
             console.log("CARREGOU");
+            // return false;
             return true;
         } else {
             return false;
@@ -385,7 +394,7 @@ function evaluation() {
                 <main className="grid gap-5 md:grid-cols-12 grid-cols-1">
                     <div className="col-start-3 col-span-6">
                         {activePlayer !== null ? (
-                            groups.map((group, index) => {
+                            groups[activeJourney.slug].map((group, index) => {
                                 let aaa;
                                 return (
                                     <section
