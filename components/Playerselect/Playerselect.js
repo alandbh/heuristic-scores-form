@@ -39,7 +39,7 @@ function PlayerSelect({
                     />
                 ) : (
                     <>
-                        <label>Select a journey:</label>
+                        <label>Select a Player:</label>
 
                         <div className={styles.imageWrapper}>
                             <figure>

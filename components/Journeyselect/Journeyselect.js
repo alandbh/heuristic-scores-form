@@ -37,7 +37,7 @@ function JourneySelect({
             <div className={styles.wrapper}>
                 {journeys.length > 0 ? (
                     <>
-                        <label htmlFor="selectJourney">Select a journey:</label>
+                        <label htmlFor="selectJourney">Select a Journey:</label>
                         <button
                             id="selectJourney"
                             className={`text-blue-500 ${styles.toggle} ${
