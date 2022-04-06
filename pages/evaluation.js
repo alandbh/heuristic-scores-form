@@ -22,7 +22,7 @@ setInterval(() => {
     count++;
 
     if (typeof window !== "undefined") {
-        return;
+        // return;
         let _localActivePlayer = JSON.parse(
             localStorage.getItem("localActivePlayer")
         );
@@ -511,6 +511,7 @@ function evaluation() {
         );
 
         setActivePlayer({ ...currentPlayer, findings: currentFindings });
+        setLocalActivePlayer({ ...currentPlayer, findings: currentFindings });
         return;
 
         // let currentFindings = [...currentPlayer.findings];
@@ -567,8 +568,26 @@ function evaluation() {
         // setPlayers(currentPlayers);
     }
 
-    function handleTypeFinding(id, value) {
-        let currentFindings = [...activePlayer.findings];
+    function handleTypeFinding(id, value, currentPlayer) {
+        let currentFindings = JSON.parse(
+            localStorage.getItem("finding" + currentPlayer.slug)
+        );
+
+        currentFindings[currentFindings.findIndex((el) => el.id === id)].type =
+            value;
+
+        console.log(currentFindings);
+
+        localStorage.setItem(
+            "finding" + currentPlayer.slug,
+            JSON.stringify(currentFindings)
+        );
+
+        setActivePlayer({ ...currentPlayer, findings: currentFindings });
+        setLocalActivePlayer({ ...currentPlayer, findings: currentFindings });
+        return;
+
+        // let currentFindings = [...activePlayer.findings];
         currentFindings.find((fi) => fi.id === id).type = value;
 
         setFindigns(currentFindings);
@@ -607,6 +626,28 @@ function evaluation() {
         // setPlayers(currentPlayers);
         // setPlayerHasChanged(false);
     }
+
+    useEffect(() => {
+        if (
+            activePlayer &&
+            activePlayer !== null &&
+            activePlayer.hasOwnProperty("findings")
+        ) {
+            let currentFindings = JSON.parse(
+                localStorage.getItem("finding" + activePlayer.slug)
+            );
+
+            if (currentFindings.length > 0) {
+                setPlayerHasChanged(true);
+                setLocalActivePlayer({
+                    ...activePlayer,
+                    findings: currentFindings,
+                });
+                // debSetScore({ ...activePlayer, findings: currentFindings });
+                // setActivePlayer({ ...activePlayer, findings: currentFindings });
+            }
+        }
+    }, [activePlayer]);
 
     return (
         check() && (

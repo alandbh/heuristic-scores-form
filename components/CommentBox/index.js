@@ -11,7 +11,7 @@ function CommentBox({
 }) {
     function onChangeValue(ev) {
         console.log("RADIO", ev.target.value);
-        handleTypeFinding(finding.id, ev.target.value);
+        handleTypeFinding(finding.id, ev.target.value, activePlayer);
     }
 
     return (
