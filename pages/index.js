@@ -99,7 +99,7 @@ function seed() {
 
             if (player.findings.length === 0) {
                 player.findings.push({
-                    id: "f1",
+                    id: player.slug + "f1",
                     type: "neutral",
                     text: "n/a",
                 });

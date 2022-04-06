@@ -19,7 +19,7 @@ function CommentBox({
             <textarea
                 key={index}
                 value={finding.text}
-                id={activePlayer.slug + finding.id}
+                id={finding.id}
                 onChange={(ev) => handleTextFinding(ev, activePlayer)}
                 className={styles[finding.type]}
             ></textarea>

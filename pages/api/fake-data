@@ -89,17 +89,17 @@ const player1 = {
         {
             text: "Um comentário positivo aqui lorem imsum dolor sit amet",
             type: "good",
-            id: "f1",
+            id: "magazineluizaf1",
         },
         {
             text: "Outro comentário positivo aqui lorem imsum dolor sit amet",
             type: "good",
-            id: "f2",
+            id: "magazineluizaf2",
         },
         {
             text: "Um comentário NEGATIVO aqui lorem imsum dolor sit amet",
             type: "bad",
-            id: "f3",
+            id: "magazineluizaf3",
         },
     ],
 };
@@ -163,12 +163,12 @@ const player2 = {
         {
             text: "Um comentário positivo aqui lorem imsum dolor sit amet",
             type: "good",
-            id: "f1",
+            id: "submarinof1",
         },
         {
             text: "Um comentário NEGATIVO aqui lorem imsum dolor sit amet",
             type: "bad",
-            id: "f2",
+            id: "submarinof2",
         },
     ],
 };
@@ -240,7 +240,8 @@ const player4 = {
     findings: [
         {
             text: "Um comentário NEGATIVO aqui lorem imsum dolor sit amet",
-            is_positive: false,
+            type: "bad",
+            id: "arezzof1",
         },
     ],
 };

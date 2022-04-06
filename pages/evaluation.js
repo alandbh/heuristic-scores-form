@@ -126,6 +126,20 @@ function evaluation() {
         });
     }, []);
 
+    useEffect(() => {
+        console.log("PRIMEIROS FINDINGS", allPlayers[0]);
+        // setFindigns([...activePlayer.findings]);
+
+        if (allPlayers && allPlayers.length > 0) {
+            allPlayers.map((player) => {
+                localStorage.setItem(
+                    "finding" + player.slug,
+                    JSON.stringify(player.findings)
+                );
+            });
+        }
+    }, [allPlayers]);
+
     // Selecting the FIRST JOURNEY
     useEffect(
         debounce(() => {
@@ -409,61 +423,128 @@ function evaluation() {
     //     [activePlayer]
     // );
 
-    function addMoreFinding() {
-        let current = { ...activePlayer };
-        current.findings.push({
-            id: "f" + (Number(current.findings.length) + 1),
-            type: "neutral",
-            text: "f" + (Number(current.findings.length) + 1),
-        });
+    const memoAddMoreFinding = debounce(() => {
+        let current = JSON.parse(
+            localStorage.getItem("finding" + activePlayer.slug)
+        );
 
+        console.log(current);
+        current.push({
+            id: activePlayer.slug + "f" + (Number(current.length) + 1),
+            type: "neutral",
+            text: "f" + (Number(current.length) + 1),
+        });
+        addMoreFinding(current);
+    }, 500);
+
+    /**
+     *
+     * ADDING MORE COMMENT
+     *
+     *
+     * @param {*} current
+     */
+
+    function addMoreFinding(current) {
+        localStorage.setItem(
+            "finding" + activePlayer.slug,
+            JSON.stringify(current)
+        );
         // setFindigns(currentFindings);
-        setLocalActivePlayer(current);
+        // setLocalActivePlayer(current);
 
         setPlayerHasChanged(true);
+        debSetScore({ ...activePlayer, findings: current });
 
-        // let currentPlayers = [...players];
-        if (allPlayers && allPlayers.length > 0) {
-            let _players = [...allPlayers];
+        // // let currentPlayers = [...players];
+        // if (allPlayers && allPlayers.length > 0) {
+        //     let _players = [...allPlayers];
 
-            _players[_players.findIndex((item) => item.slug === current.slug)] =
-                current;
-            // let currentPlayer = _players.find(
-            //     (player) => player.slug === current.slug
-            // );
-            setAllPlayers(_players);
-            console.log("currentPlayers", _players);
+        //     _players[_players.findIndex((item) => item.slug === current.slug)] =
+        //         current;
+        //     // let currentPlayer = _players.find(
+        //     //     (player) => player.slug === current.slug
+        //     // );
+        //     setAllPlayers(_players);
+        //     console.log("currentPlayers", _players);
+        // }
+    }
+
+    function getFindingsNodes(currentPlayer) {
+        if (
+            currentPlayer &&
+            currentPlayer.hasOwnProperty("slug") &&
+            currentPlayer !== null
+        ) {
+            console.log(
+                "LOCAL",
+                localStorage.getItem("finding" + currentPlayer.slug)
+            );
+
+            // return;
+            let current;
+
+            if (localStorage.getItem("finding" + currentPlayer.slug)) {
+                current = JSON.parse(
+                    localStorage.getItem("finding" + currentPlayer.slug)
+                );
+            }
+
+            return current;
         }
     }
 
-    useEffect(() => {
-        console.log("PLAYER", activePlayer);
-        // setFindigns([...activePlayer.findings]);
-    }, [activePlayer]);
+    function handleTextFinding(ev, currentPlayer) {
+        let currentFindings = JSON.parse(
+            localStorage.getItem("finding" + currentPlayer.slug)
+        );
 
-    function handleTextFinding(ev) {
-        let currentFindings = [...activePlayer.findings];
+        currentFindings[
+            currentFindings.findIndex((el) => el.id === ev.target.id)
+        ].text = ev.target.value;
+
+        console.log(currentFindings);
+
+        localStorage.setItem(
+            "finding" + currentPlayer.slug,
+            JSON.stringify(currentFindings)
+        );
+
+        setActivePlayer({ ...currentPlayer, findings: currentFindings });
+        return;
+
+        // let currentFindings = [...currentPlayer.findings];
+
         let thisFinding = currentFindings.find((fi) => fi.id === ev.target.id);
+        console.log(ev.target);
+
+        // return;
 
         console.log(thisFinding);
         // debugger;
         thisFinding.text = ev.target.value;
 
-        setFindigns([...activePlayer.findings, thisFinding]);
-        setLocalActivePlayer({
-            ...localActivePlayer,
-            findings: currentFindings,
-        });
-        // setActivePlayer({
-        //     ...activePlayer,
+        localStorage.setItem(
+            "finding" + currentPlayer.slug,
+            JSON.stringify(current)
+        );
+
+        setFindigns([...currentPlayer.findings, thisFinding]);
+        // setcurrentPlayer({
+        //     ...currentPlayer,
         //     findings: currentFindings,
         // });
         // setPlayerHasChanged(true);
 
-        // localStorage.setItem(
-        //     "localActivePlayer",
-        //     JSON.stringify(localActivePlayer)
-        // );
+        localStorage.setItem("localActivePlayer", "");
+        setLocalActivePlayer({
+            ...currentPlayer,
+            findings: currentFindings,
+        });
+        localStorage.setItem(
+            "localActivePlayer",
+            JSON.stringify(currentPlayer)
+        );
 
         // setLocalActivePlayer({
         //     ...localActivePlayer,
@@ -471,10 +552,11 @@ function evaluation() {
         // });
 
         // // debSave(updatedActivePlayer);
-        // debSetScore({
-        //     ...localActivePlayer,
-        //     findings: currentFindings,
-        // });
+        // setPlayerHasChanged(false);
+        debSetScore({
+            ...currentPlayer,
+            findings: currentFindings,
+        });
 
         // setActivePlayer({ ...activePlayer, findings: currentFindings });
 
@@ -483,7 +565,6 @@ function evaluation() {
         //     (player) => player.slug === localActivePlayer.slug
         // ).findings = currentFindings;
         // setPlayers(currentPlayers);
-        // setPlayerHasChanged(false);
     }
 
     function handleTypeFinding(id, value) {
@@ -647,8 +728,9 @@ function evaluation() {
                             <div>Carregando</div>
                         )}
 
-                        {localActivePlayer !== null &&
-                        localActivePlayer.hasOwnProperty("findings") ? (
+                        {activePlayer &&
+                        activePlayer !== null &&
+                        activePlayer.hasOwnProperty("findings") ? (
                             <section className={styles.findingsContainer}>
                                 <Sectionheader text="General Findings" />
 
@@ -667,32 +749,37 @@ function evaluation() {
                                         recognition does not work properly).
                                     </p>
 
-                                    {allPlayers
-                                        .find(
-                                            (player) =>
-                                                player.slug ===
-                                                activePlayer.slug
+                                    {getFindingsNodes(activePlayer) &&
+                                    getFindingsNodes(activePlayer).length >
+                                        0 ? (
+                                        getFindingsNodes(activePlayer).map(
+                                            (finding, index) => {
+                                                return (
+                                                    <>
+                                                        <CommentBox
+                                                            index={index}
+                                                            finding={finding}
+                                                            activePlayer={
+                                                                activePlayer
+                                                            }
+                                                            handleTextFinding={
+                                                                handleTextFinding
+                                                            }
+                                                            handleTypeFinding={
+                                                                handleTypeFinding
+                                                            }
+                                                        ></CommentBox>
+                                                    </>
+                                                );
+                                            }
                                         )
-                                        .findings.map((finding, index) => {
-                                            return (
-                                                <>
-                                                    <CommentBox
-                                                        index={index}
-                                                        finding={finding}
-                                                        handleTextFinding={
-                                                            handleTextFinding
-                                                        }
-                                                        handleTypeFinding={
-                                                            handleTypeFinding
-                                                        }
-                                                    ></CommentBox>
-                                                </>
-                                            );
-                                        })}
+                                    ) : (
+                                        <b>Wait...</b>
+                                    )}
 
                                     <button
                                         className={styles.btnAddNote}
-                                        onClick={addMoreFinding}
+                                        onClick={memoAddMoreFinding}
                                     >
                                         <Image
                                             src="/icon-addnote.svg"
