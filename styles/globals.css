@@ -23,6 +23,13 @@ a {
     box-sizing: border-box;
 }
 
+pre {
+    white-space: break-spaces;
+    width: 100%;
+    overflow-wrap: break-word;
+    font-size: x-small;
+}
+
 .grid-12 {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
