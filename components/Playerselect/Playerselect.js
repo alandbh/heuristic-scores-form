@@ -44,9 +44,7 @@ function PlayerSelect({
                         <div className={styles.imageWrapper}>
                             <figure>
                                 <img
-                                    src={`/logos/player-${
-                                        activePlayer.id + ".png"
-                                    }`}
+                                    src={`/logos/${activePlayer.slug + ".png"}`}
                                     alt={activePlayer ? activePlayer.name : ""}
                                     role="button"
                                     onClick={handleToggle}

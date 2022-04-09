@@ -27,6 +27,7 @@
         // border: 1px solid red;
         display: flex;
         width: 100px;
+        height: 40px;
         // height: 61px;
 
         img {
@@ -40,7 +41,7 @@
         height: auto;
         transition: 0.4s;
         background: white;
-        position: fixed;
+        position: absolute;
         // box-shadow: 0px 8px 10px #00000011;
         @extend .box-shadow;
         width: max-content;
