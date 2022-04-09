@@ -3,7 +3,7 @@ import Image from "next/image";
 import Range from "../Range";
 import debounce from "lodash.debounce";
 import throttle from "lodash.throttle";
-import { useDidUpdate } from "../../pages/api/utils";
+import { storage, useDidUpdate } from "../../pages/api/utils";
 import styles from "./HeuristicNode.module.scss";
 
 // import { Container } from './styles';
@@ -82,15 +82,10 @@ function HeuristicNode({
     const changeValues = useCallback(() => {}, [values]);
 
     useEffect(() => {
-        // debugger;
-
         if (hasChanged) {
             setScore(slug, { ...values });
             setHasChanged(false);
         }
-        // debounce(() => {}, 500);
-
-        // debouncedSaving();
     }, [changeValues]);
 
     useDidUpdate(() => {
@@ -116,6 +111,7 @@ function HeuristicNode({
     function handleChangeRange(ev) {
         setHasChanged(true);
         setValues({ ...values, score: ev.target.value });
+        storage.set("isFirstLoad", "false");
 
         // console.log("salvar agora!!!");
     }
@@ -130,6 +126,7 @@ function HeuristicNode({
         console.log("debou3", ev.target.value);
         setHasChanged(true);
         setValues({ ...values, note: ev.target.value });
+        storage.set("isFirstLoad", "false");
     };
 
     useDidUpdate(() => {}, [values]);

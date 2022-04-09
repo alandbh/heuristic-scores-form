@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../styles/Evaluation.module.scss";
 import Image from "next/image";
 import getData from "../services/getData";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import {
     useLocalStorage,
     updadePlayer,
@@ -10,6 +10,7 @@ import {
     getPlayersFromJourney,
     getHeuristicsFromJourney,
     useDidUpdate,
+    storage,
 } from "./api/utils";
 import PlayerSelect from "../components/Playerselect/Playerselect";
 import JourneySelect from "../components/Journeyselect/Journeyselect";
@@ -92,7 +93,7 @@ function evaluation() {
         null
     );
 
-    const [activeJourneySlug, setActiveJourneySlug] = useState("");
+    // const [isFirstLoad, setisFirstLoad] = useLocalStorage("isFirstLoad", true);
 
     /**
      *
@@ -124,6 +125,9 @@ function evaluation() {
             setAllHeuristics(data);
             setLoadedData((loadedData.heuristics = true));
         });
+
+        // localStorage.setItem("isFirstLoad", "true");
+        storage.set("isFirstLoad", "true");
     }, []);
 
     /**
@@ -135,10 +139,12 @@ function evaluation() {
     useEffect(() => {
         if (allPlayers && allPlayers.length > 0) {
             allPlayers.map((player) => {
-                localStorage.setItem(
-                    "finding" + player.slug,
-                    JSON.stringify(player.findings)
-                );
+                // localStorage.setItem(
+                //     "finding" + player.slug,
+                //     JSON.stringify(player.findings)
+                // );
+
+                storage.set("finding" + player.slug, player.findings);
             });
         }
     }, [allPlayers]);
@@ -277,10 +283,24 @@ function evaluation() {
         // memoSetHeuristicScore.cancel();
     }
 
-    const debSetScore = (localPlayer) => {
-        // console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
+    // const debSetScore = (localPlayer) => {
+    //     // console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
+    //     let _localPlayer = { ...localPlayer };
+    //     delete _localPlayer._id;
+    //     // updadePlayer(_localPlayer);
+    //     // setActivePlayer(_localPlayer);
+    //     if (playerHasChanged) {
+    //         // debugger;
+    //         setActivePlayer(_localPlayer);
+    //         // setActivePlayer(localActivePlayer);
+    //     }
+
+    //     // cancelDebounce();
+    // };
+
+    const debSetScore = debounce((localPlayer) => {
         let _localPlayer = { ...localPlayer };
-        delete _localPlayer._id;
+        // delete _localPlayer._id;
         // updadePlayer(_localPlayer);
         // setActivePlayer(_localPlayer);
         if (playerHasChanged) {
@@ -288,9 +308,7 @@ function evaluation() {
             setActivePlayer(_localPlayer);
             // setActivePlayer(localActivePlayer);
         }
-
-        // cancelDebounce();
-    };
+    }, 600);
 
     function setHeuristicScore(hSlug, values) {
         // console.log("SETANDO SCORE", hSlug, values);
@@ -332,30 +350,18 @@ function evaluation() {
      * SAVING TO DATABASE
      */
 
-    useEffect(() => {
-        let count = 0;
-        const interval = setInterval(() => {
-            if (typeof window !== "undefined") {
-                // return;
-                // let _localActivePlayer = JSON.parse(
-                //     localStorage.getItem("localActivePlayer")
-                // );
-
-                let _localActivePlayer = { ...localActivePlayer };
-                delete _localActivePlayer._id;
-
-                // debugger;
-                count++;
-                console.log("SALVANDO - " + count, _localActivePlayer);
-                //updadePlayer(_localActivePlayer);
-            }
-        }, 20 * 1000);
-
-        return () => clearInterval(interval);
-    }, []);
-
     useDidUpdate(() => {
-        console.log("ola ae", localActivePlayer);
+        if (
+            playerHasChanged &&
+            // localStorage.getItem("isFirstLoad") === "false"
+            storage.get("isFirstLoad") === "false"
+        ) {
+            console.log("SALVANDO", localActivePlayer);
+            let _localActivePlayer = { ...localActivePlayer };
+            delete _localActivePlayer._id;
+
+            // updadePlayer(_localActivePlayer);
+        }
     }, [localActivePlayer]);
 
     function getHeuristicsByGroup(group) {
@@ -392,10 +398,10 @@ function evaluation() {
     const [findings, setFindigns] = useState([]);
 
     const memoAddMoreFinding = () => {
-        let current = JSON.parse(
-            localStorage.getItem("finding" + activePlayer.slug)
-        );
-
+        // let current = JSON.parse(
+        //     localStorage.getItem("finding" + activePlayer.slug)
+        // );
+        let current = storage.get("finding" + activePlayer.slug);
         // console.log(current);
         current.push({
             id: activePlayer.slug + "f" + (Number(current.length) + 1),
@@ -414,15 +420,19 @@ function evaluation() {
      */
 
     function addMoreFinding(current) {
-        localStorage.setItem(
-            "finding" + activePlayer.slug,
-            JSON.stringify(current)
-        );
+        // localStorage.setItem(
+        //     "finding" + activePlayer.slug,
+        //     JSON.stringify(current)
+        // );
+
+        storage.set("finding" + activePlayer.slug, current);
         // setFindigns(currentFindings);
         // setLocalActivePlayer(current);
 
         setPlayerHasChanged(true);
-        debSetScore({ ...activePlayer, findings: current });
+        // debSetFinding({ ...activePlayer, findings: current });
+        setActivePlayer({ ...activePlayer, findings: current });
+        setLocalActivePlayer({ ...activePlayer, findings: current });
     }
 
     function getFindingsNodes(currentPlayer) {
@@ -434,51 +444,70 @@ function evaluation() {
             // return;
             let current;
 
-            if (localStorage.getItem("finding" + currentPlayer.slug)) {
-                current = JSON.parse(
-                    localStorage.getItem("finding" + currentPlayer.slug)
-                );
+            // if (localStorage.getItem("finding" + currentPlayer.slug)) {
+            //     current = JSON.parse(
+            //         localStorage.getItem("finding" + currentPlayer.slug)
+            //     );
+            // }
+            if (storage.get("finding" + currentPlayer.slug)) {
+                current = storage.get("finding" + currentPlayer.slug);
             }
 
             return current;
         }
     }
 
-    function handleTextFinding(ev, currentPlayer) {
-        let currentFindings = JSON.parse(
-            localStorage.getItem("finding" + currentPlayer.slug)
-        );
+    // const changeValues = useCallback(() => {}, [values]);
 
+    // useEffect(() => {
+    //     if (hasChanged) {
+    //         setScore(slug, { ...values });
+    //         setHasChanged(false);
+    //     }
+    // }, [changeValues]);
+
+    function handleTextFinding(ev, currentPlayer) {
+        // let currentFindings = JSON.parse(
+        //     localStorage.getItem("finding" + currentPlayer.slug)
+        // );
+        let currentFindings = storage.get("finding" + currentPlayer.slug);
         currentFindings[
             currentFindings.findIndex((el) => el.id === ev.target.id)
         ].text = ev.target.value;
 
         // console.log(currentFindings);
 
-        localStorage.setItem(
-            "finding" + currentPlayer.slug,
-            JSON.stringify(currentFindings)
-        );
+        // localStorage.setItem(
+        //     "finding" + currentPlayer.slug,
+        //     JSON.stringify(currentFindings)
+        // );
 
-        setActivePlayer({ ...currentPlayer, findings: currentFindings });
-        setLocalActivePlayer({ ...currentPlayer, findings: currentFindings });
-        return;
+        storage.set("finding" + currentPlayer.slug, currentFindings);
+
+        debSetFinding({ ...currentPlayer, findings: currentFindings });
     }
 
-    function handleTypeFinding(id, value, currentPlayer) {
-        let currentFindings = JSON.parse(
-            localStorage.getItem("finding" + currentPlayer.slug)
-        );
+    const debSetFinding = debounce((player) => {
+        setActivePlayer(player);
+        setLocalActivePlayer(player);
+    }, 1000);
 
+    function handleTypeFinding(id, value, currentPlayer) {
+        // let currentFindings = JSON.parse(
+        //     localStorage.getItem("finding" + currentPlayer.slug)
+        // );
+        let currentFindings = storage.get("finding" + currentPlayer.slug);
         currentFindings[currentFindings.findIndex((el) => el.id === id)].type =
             value;
 
         // console.log(currentFindings);
 
-        localStorage.setItem(
-            "finding" + currentPlayer.slug,
-            JSON.stringify(currentFindings)
-        );
+        // localStorage.setItem(
+        //     "finding" + currentPlayer.slug,
+        //     JSON.stringify(currentFindings)
+        // );
+
+        storage.set("finding" + currentPlayer.slug, currentFindings);
 
         setActivePlayer({ ...currentPlayer, findings: currentFindings });
         setLocalActivePlayer({ ...currentPlayer, findings: currentFindings });
@@ -491,10 +520,10 @@ function evaluation() {
             activePlayer !== null &&
             activePlayer.hasOwnProperty("findings")
         ) {
-            let currentFindings = JSON.parse(
-                localStorage.getItem("finding" + activePlayer.slug)
-            );
-
+            // let currentFindings = JSON.parse(
+            //     localStorage.getItem("finding" + activePlayer.slug)
+            // );
+            let currentFindings = storage.get("finding" + activePlayer.slug);
             if (currentFindings.length > 0) {
                 setPlayerHasChanged(true);
                 setLocalActivePlayer({
@@ -509,7 +538,7 @@ function evaluation() {
 
     return (
         check() && (
-            <div>
+            <>
                 <Head>
                     <title>Evaluation - Heuristics Collector</title>
                     <meta name="description" content="Heuristics collector" />
@@ -689,7 +718,7 @@ function evaluation() {
                         coluna 2<pre>{JSON.stringify(localActivePlayer)}</pre>
                     </div>
                 </main>
-            </div>
+            </>
         )
     );
 }

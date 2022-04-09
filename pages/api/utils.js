@@ -106,3 +106,19 @@ export const useDidUpdate = (callback, dependencies) => {
         }
     }, dependencies);
 };
+
+function getLocalItem(item) {
+    if (typeof window !== "undefined") {
+        return JSON.parse(localStorage.getItem(item));
+    }
+}
+function setLocalItem(item, value) {
+    if (typeof window !== "undefined") {
+        return localStorage.setItem(item, JSON.stringify(value));
+    }
+}
+
+export const storage = {
+    get: (item) => getLocalItem(item),
+    set: (item, value) => setLocalItem(item, value),
+};
