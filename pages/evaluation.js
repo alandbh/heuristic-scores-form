@@ -2,8 +2,15 @@ import Head from "next/head";
 import styles from "../styles/Evaluation.module.scss";
 import Image from "next/image";
 import getData from "../services/getData";
-import { useEffect, useState, useCallback } from "react";
-import { useLocalStorage, updadePlayer } from "./api/utils";
+import { useEffect, useState, useCallback, useRef } from "react";
+import {
+    useLocalStorage,
+    updadePlayer,
+    orderBy,
+    getPlayersFromJourney,
+    getHeuristicsFromJourney,
+    useDidUpdate,
+} from "./api/utils";
 import PlayerSelect from "../components/Playerselect/Playerselect";
 import JourneySelect from "../components/Journeyselect/Journeyselect";
 import Header from "../components/Header/Header";
@@ -32,41 +39,25 @@ setInterval(() => {
     }
 }, 10 * 1000);
 
-// setInterval();
-
-function orderBy(array, param) {
-    return array.sort((a, b) => a[param].localeCompare(b[param]));
-}
-
-function getPlayersFromJourney(journey, allPlayers) {
-    if (journey && allPlayers.length > 0) {
-    }
-    const unsortedPlayers = journey.players.map((plId) => {
-        return allPlayers.filter((player) => player.id === plId)[0];
-    });
-    return orderBy(unsortedPlayers, "slug");
-}
-
-function getHeuristicsFromJourney(journey, allHeuristics) {
-    if (journey && allHeuristics.length > 0) {
-        const unsortedHeuristics = journey.heuristics.map((hSlug) => {
-            return allHeuristics.filter(
-                (heuristic) => heuristic.slug === hSlug
-            )[0];
-        });
-
-        return orderBy(unsortedHeuristics, "slug");
-    }
-}
-
 function objIsEmpty(obj) {
     return obj.constructor === Object && Object.keys(obj).length === 0;
 }
-// import { Container } from './styles';
 
-// let localActivePlayer = {};
+/**
+ *
+ * ---------------------------------------------
+ * THIS IS THE BEGINNING OF THE COMPONENT
+ * ---------------------------------------------
+ *
+ * @returns EVALUATION COMPONENT
+ */
 
 function evaluation() {
+    /**
+     *
+     * SETTING THE INICIAL STATES
+     *
+     */
     const [allPlayers, setAllPlayers] = useLocalStorage("allPlayers", []);
     const [players, setPlayers] = useLocalStorage("players", []);
     const [activePlayer, setActivePlayer] = useLocalStorage(
@@ -96,14 +87,23 @@ function evaluation() {
         players: false,
     });
 
-    const [localActivePlayer, setLocalActivePlayer] = useState({});
+    const [localActivePlayer, setLocalActivePlayer] = useLocalStorage(
+        "localActivePlayer",
+        null
+    );
+
+    const [activeJourneySlug, setActiveJourneySlug] = useState("");
 
     /**
      *
+     * ----------------------------------
      * Fetching All Data From Database
+     * ----------------------------------
      */
     useEffect(() => {
         // All Journeys
+
+        // debugger;
 
         getData("journeys").then((data) => {
             // console.log("dentro", data);
@@ -126,10 +126,13 @@ function evaluation() {
         });
     }, []);
 
+    /**
+     *
+     *
+     * Setting All Findings In LocalStorage
+     *
+     *  */
     useEffect(() => {
-        // console.log("PRIMEIROS FINDINGS", allPlayers[0]);
-        // setFindigns([...activePlayer.findings]);
-
         if (allPlayers && allPlayers.length > 0) {
             allPlayers.map((player) => {
                 localStorage.setItem(
@@ -140,15 +143,16 @@ function evaluation() {
         }
     }, [allPlayers]);
 
-    // Selecting the FIRST JOURNEY
+    /**
+     *
+     * Selecting the FIRST JOURNEY as ActiveJourney
+     *
+     */
+
     useEffect(
         debounce(() => {
             if (journeys.length > 0 && activeJourney === null) {
-                // console.log("setando journey", journeys[0]);
                 setActiveJourney(journeys[0]);
-                // setLoadedData((loadedData.activeJourney = true));
-
-                // console.log("DEBOUUU222");
             }
         }, 500),
 
@@ -169,6 +173,8 @@ function evaluation() {
                 allHeuristics.length > 0
             ) {
                 let groups = {};
+
+                console.log("mudou journey");
 
                 const allGroupNames = allHeuristics.map(
                     (heuristic) => heuristic.group
@@ -238,8 +244,13 @@ function evaluation() {
             // debugger;
             setPlayers(playersFromJourney);
             setActivePlayer(playersFromJourney[0]);
-            setLocalActivePlayer(playersFromJourney[0]);
+            // setLocalActivePlayer(playersFromJourney[0]);
             setPlayerHasChanged(true);
+
+            // localStorage.setItem(
+            //     "localActivePlayer",
+            //     JSON.stringify(playersFromJourney[0])
+            // );
         }
         // loadedData.players = true;
     }, [activeJourney]);
@@ -260,14 +271,13 @@ function evaluation() {
     const memoSetHeuristicScore = debounce((hSlug, values) => {
         // console.log("MEMO FORA AQUI", count++);
         setHeuristicScore(hSlug, values);
-    }, 1000);
+    }, 500);
 
     if (count > 0) {
         // memoSetHeuristicScore.cancel();
     }
 
-    let debCount = 0;
-    const debSetScore = debounce((localPlayer) => {
+    const debSetScore = (localPlayer) => {
         // console.log("MEMO AQUI SALVANDO", localPlayer, debCount++);
         let _localPlayer = { ...localPlayer };
         delete _localPlayer._id;
@@ -280,13 +290,7 @@ function evaluation() {
         }
 
         // cancelDebounce();
-    }, 0.5 * 1000);
-    // function debSave(player) {
-    //     debSetScore();
-    // }
-    if (debCount > 0) {
-        // debSetScore.cancel();
-    }
+    };
 
     function setHeuristicScore(hSlug, values) {
         // console.log("SETANDO SCORE", hSlug, values);
@@ -305,15 +309,15 @@ function evaluation() {
 
             // setActivePlayer({ ...updatedActivePlayer });
 
-            localStorage.setItem("localActivePlayer", "");
-            localStorage.setItem(
-                "localActivePlayer",
-                JSON.stringify({ ...updatedActivePlayer })
-            );
+            // localStorage.setItem("localActivePlayer", "");
+            // localStorage.setItem(
+            //     "localActivePlayer",
+            //     JSON.stringify({ ...updatedActivePlayer })
+            // );
 
             // localActivePlayer = { ...updatedActivePlayer };
 
-            setLocalActivePlayer({ ...updatedActivePlayer });
+            // setLocalActivePlayer({ ...updatedActivePlayer });
 
             // debSave(updatedActivePlayer);
             debSetScore(updatedActivePlayer);
@@ -322,6 +326,37 @@ function evaluation() {
             // setLoadedData((loadedData.activePlayer = true));
         }
     }
+
+    /**
+     *
+     * SAVING TO DATABASE
+     */
+
+    useEffect(() => {
+        let count = 0;
+        const interval = setInterval(() => {
+            if (typeof window !== "undefined") {
+                // return;
+                // let _localActivePlayer = JSON.parse(
+                //     localStorage.getItem("localActivePlayer")
+                // );
+
+                let _localActivePlayer = { ...localActivePlayer };
+                delete _localActivePlayer._id;
+
+                // debugger;
+                count++;
+                console.log("SALVANDO - " + count, _localActivePlayer);
+                //updadePlayer(_localActivePlayer);
+            }
+        }, 20 * 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useDidUpdate(() => {
+        console.log("ola ae", localActivePlayer);
+    }, [localActivePlayer]);
 
     function getHeuristicsByGroup(group) {
         const heuristicsByGroup = heuristics.filter(
@@ -344,7 +379,6 @@ function evaluation() {
             activeJourney !== null &&
             activePlayer !== null
         ) {
-            console.log("CARREGOU");
             // return false;
             return true;
         } else {
@@ -357,7 +391,7 @@ function evaluation() {
 
     const [findings, setFindigns] = useState([]);
 
-    const memoAddMoreFinding = debounce(() => {
+    const memoAddMoreFinding = () => {
         let current = JSON.parse(
             localStorage.getItem("finding" + activePlayer.slug)
         );
@@ -369,7 +403,7 @@ function evaluation() {
             text: "f" + (Number(current.length) + 1),
         });
         addMoreFinding(current);
-    }, 500);
+    };
 
     /**
      *
@@ -517,76 +551,69 @@ function evaluation() {
                     <div className="col-start-3 col-span-6">
                         {activePlayer !== null ? (
                             groups[activeJourney.slug].map((group, index) => {
-                                let aaa;
                                 return (
-                                    <>
-                                        <section
-                                            className={styles.sectionContainer}
-                                            key={index}
-                                        >
-                                            <GroupSectionheader
-                                                index={index}
-                                                group={group}
-                                                activePlayer={activePlayer}
-                                                activeJourney={activeJourney}
-                                            ></GroupSectionheader>
+                                    <section
+                                        className={styles.sectionContainer}
+                                        key={index}
+                                    >
+                                        <GroupSectionheader
+                                            index={index}
+                                            group={group}
+                                            activePlayer={activePlayer}
+                                            activeJourney={activeJourney}
+                                        ></GroupSectionheader>
 
-                                            <div
-                                                className={
-                                                    styles.sectionContent
-                                                }
-                                            >
-                                                {group.heuristics
-                                                    .filter((heuristic) =>
-                                                        activeJourney.heuristics.includes(
-                                                            heuristic.slug
-                                                        )
+                                        <div className={styles.sectionContent}>
+                                            {group.heuristics
+                                                .filter((heuristic) =>
+                                                    activeJourney.heuristics.includes(
+                                                        heuristic.slug
                                                     )
-                                                    .map((heuristic, index) => {
-                                                        // debugger;
+                                                )
+                                                .map((heuristic, index) => {
+                                                    // debugger;
 
-                                                        return (
-                                                            <HeuristicNode
-                                                                key={index}
-                                                                slug={
-                                                                    heuristic.slug
-                                                                }
-                                                                playerHasChanged={
-                                                                    playerHasChanged
-                                                                }
-                                                                setPlayerHasChanged={
-                                                                    setPlayerHasChanged
-                                                                }
-                                                                activeJourney={
-                                                                    activeJourney.slug
-                                                                }
-                                                                journeyHasChanged={
-                                                                    journeyHasChanged
-                                                                }
-                                                                title={
-                                                                    heuristic.title
-                                                                }
-                                                                description={
-                                                                    heuristic.description
-                                                                }
-                                                                activePlayer={
-                                                                    activePlayer
-                                                                }
-                                                                setScore={(
+                                                    return (
+                                                        <HeuristicNode
+                                                            key={index}
+                                                            slug={
+                                                                heuristic.slug
+                                                            }
+                                                            playerHasChanged={
+                                                                playerHasChanged
+                                                            }
+                                                            setPlayerHasChanged={
+                                                                setPlayerHasChanged
+                                                            }
+                                                            activeJourney={
+                                                                activeJourney.slug
+                                                            }
+                                                            journeyHasChanged={
+                                                                journeyHasChanged
+                                                            }
+                                                            title={
+                                                                heuristic.title
+                                                            }
+                                                            description={
+                                                                heuristic.description
+                                                            }
+                                                            activePlayer={
+                                                                activePlayer
+                                                            }
+                                                            setScore={(
+                                                                slug,
+                                                                values
+                                                            ) =>
+                                                                memoSetHeuristicScore(
                                                                     slug,
                                                                     values
-                                                                ) =>
-                                                                    memoSetHeuristicScore(
-                                                                        slug,
-                                                                        values
-                                                                    )
-                                                                }
-                                                            />
-                                                        );
-                                                    })}
-                                            </div>
-                                        </section>
-                                    </>
+                                                                )
+                                                            }
+                                                        />
+                                                    );
+                                                })}
+                                        </div>
+                                    </section>
                                 );
                             })
                         ) : (
@@ -620,21 +647,20 @@ function evaluation() {
                                         getFindingsNodes(activePlayer).map(
                                             (finding, index) => {
                                                 return (
-                                                    <>
-                                                        <CommentBox
-                                                            index={index}
-                                                            finding={finding}
-                                                            activePlayer={
-                                                                activePlayer
-                                                            }
-                                                            handleTextFinding={
-                                                                handleTextFinding
-                                                            }
-                                                            handleTypeFinding={
-                                                                handleTypeFinding
-                                                            }
-                                                        ></CommentBox>
-                                                    </>
+                                                    <CommentBox
+                                                        key={finding.id}
+                                                        index={index}
+                                                        finding={finding}
+                                                        activePlayer={
+                                                            activePlayer
+                                                        }
+                                                        handleTextFinding={
+                                                            handleTextFinding
+                                                        }
+                                                        handleTypeFinding={
+                                                            handleTypeFinding
+                                                        }
+                                                    ></CommentBox>
                                                 );
                                             }
                                         )

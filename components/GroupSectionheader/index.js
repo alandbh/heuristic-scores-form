@@ -23,8 +23,8 @@ function GroupSectionheader({ group, activePlayer, index, activeJourney }) {
 
         // debugger;
         // const scoresArray = HeuSlugs.map((slug) => playerScores.desktop.score);
-        console.log("ERRO AQUI playerScores", playerScores);
-        console.log("ERRO AQUI HeuSlugs", HeuSlugs);
+        // console.log("ERRO AQUI playerScores", playerScores);
+        // console.log("ERRO AQUI HeuSlugs", HeuSlugs);
         const scoresArray =
             playerScores !== undefined && HeuSlugs
                 ? HeuSlugs.map((slug) =>

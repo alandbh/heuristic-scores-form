@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function getStorageValue(key, defaultValue) {
     // getting stored value
@@ -68,3 +68,41 @@ export async function updadePlayer(playerObj) {
 
     //?player=Casas%20Bahia
 }
+
+export function orderBy(array, param) {
+    return array.sort((a, b) => a[param].localeCompare(b[param]));
+}
+
+export function getPlayersFromJourney(journey, allPlayers) {
+    if (journey && allPlayers.length > 0) {
+    }
+    const unsortedPlayers = journey.players.map((plId) => {
+        return allPlayers.filter((player) => player.id === plId)[0];
+    });
+    return orderBy(unsortedPlayers, "slug");
+}
+
+export function getHeuristicsFromJourney(journey, allHeuristics) {
+    if (journey && allHeuristics.length > 0) {
+        const unsortedHeuristics = journey.heuristics.map((hSlug) => {
+            return allHeuristics.filter(
+                (heuristic) => heuristic.slug === hSlug
+            )[0];
+        });
+
+        return orderBy(unsortedHeuristics, "slug");
+    }
+}
+
+export const useDidUpdate = (callback, dependencies) => {
+    const didMountRef = useRef(false);
+
+    useEffect(() => {
+        // block first call of the hook and forward each consecutive one
+        if (didMountRef.current) {
+            callback();
+        } else {
+            didMountRef.current = true;
+        }
+    }, dependencies);
+};
