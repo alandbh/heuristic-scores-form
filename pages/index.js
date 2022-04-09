@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.scss";
-import { arr_players, arr_heuristicas, arr_jornadas } from "./api/fake-data";
+import { arr_players, arr_heuristicas, arr_jornadas } from "./api/us-data";
 
 // window.arr_heuristicas = arr_heuristicas;
 // window.arr_jornadas = arr_jornadas;

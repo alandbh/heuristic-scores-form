@@ -1,0 +1,466 @@
+var arr = [
+    {
+        slug: "h.1.1",
+        category: "Need",
+    },
+    {
+        slug: "h.1.2",
+        category: "Need",
+    },
+    {
+        slug: "h.2.1",
+        category: "Informarion",
+    },
+    {
+        slug: "h.2.2",
+        category: "Informarion",
+    },
+    {
+        slug: "h.2.3",
+        category: "Informarion",
+    },
+    {
+        slug: "h.3.1",
+        category: "Shipping",
+    },
+];
+
+/**
+ * Players
+ * ------------------
+ *
+ */
+const player1 = {
+    name: "Costco Wholesale Corporation",
+    slug: "costco",
+    id: 1,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+
+const player2 = {
+    name: "Nike, Inc.",
+    slug: "nike",
+    id: 2,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+
+const player3 = {
+    name: "Kohl's",
+    slug: "kohls",
+    id: 3,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+
+const player4 = {
+    name: "Dicks Sporting goods",
+    slug: "dicks",
+    id: 4,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player5 = {
+    name: "Belk",
+    slug: "belk",
+    id: 5,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+
+const player6 = {
+    name: "Nordstrom",
+    slug: "nordstrom",
+    id: 6,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player7 = {
+    name: "Dillards",
+    slug: "dillards",
+    id: 7,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player8 = {
+    name: "Gap",
+    slug: "gap",
+    id: 8,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player9 = {
+    name: "Ralph Lauren",
+    slug: "ralphlauren",
+    id: 9,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player10 = {
+    name: "V.F. Corp (The North Face)",
+    slug: "thenorthface",
+    id: 10,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player11 = {
+    name: "Burlington",
+    slug: "burlington",
+    id: 11,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player12 = {
+    name: "Hanesbrands Inc.",
+    slug: "hanes",
+    id: 12,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player13 = {
+    name: "Foot Locker NY",
+    slug: "footlocker",
+    id: 13,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player14 = {
+    name: "JCPenney Company",
+    slug: "jcpenney",
+    id: 14,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+const player15 = {
+    name: "Sears Holding Corporation",
+    slug: "sears",
+    id: 15,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
+
+export const arr_players = [
+    player1,
+    player2,
+    player3,
+    player4,
+    player5,
+    player6,
+    player7,
+    player8,
+    player9,
+    player10,
+    player11,
+    player12,
+    player13,
+    player14,
+    player15,
+];
+
+/**
+ * Heurísticas
+ * ------------------
+ *
+ */
+
+const h_1_1 = {
+    title: "Is the navigation obvious enough throughout the related sections?",
+    description:
+        "Customer should be able to move easily through the different sections.  For instance, between the shopping cart, the detailed description of the products and the shipping information.",
+    group: "Need Recognition",
+    slug: "h_1_1",
+    type: "scale",
+    choice: ["On the platform", "Third Party", "No chatbot"],
+};
+
+const h_1_2 = {
+    title: "Does the platform use a clear user-logical hierarchy of categories to classify products and to find them?",
+    description:
+        "The categories should be easy to identify and differentiate by the customer.",
+    group: "Need Recognition",
+    slug: "h_1_2",
+    type: "scale",
+    choice: ["On the platform", "Third Party", "No chatbot"],
+};
+
+const h_1_3 = {
+    title: "Do the pages and sub-pages provide orientation elements?",
+    description:
+        "As a means to orientate it is necessary to use breadcrumbs, titles and  subtitles. The point here is to analyze which interface elements help the user to orient themselves when searching for products.",
+    group: "Need Recognition",
+    slug: "h_1_3",
+    type: "scale",
+    choice: ["On the platform", "Third Party", "No chatbot"],
+};
+const h_2_1 = {
+    title: "Are the new products or special offers prominently advertised?",
+    description:
+        "For instance, adding next to them 'New!' or 'On Sale.' Or some direct connection with Black Friday offers",
+    group: "Simulating a desire to purchase",
+    slug: "h_2_1",
+    type: "scale",
+    choice: ["On the platform", "Third Party", "No chatbot"],
+};
+
+const h_2_2 = {
+    title: "Does the platform provide recommended products?",
+    description:
+        "This can assist in finding products which might interest the customer, because they are similar to the products in which they expressed an interest. The related products can be inserted at the bottom of the product page,  shopping cart or both. Comparison will be made with logged users and anonymous users to understand if there is even a personalized recommendation.",
+    group: "Simulating a desire to purchase",
+    slug: "h_2_2",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_3_1 = {
+    title: "Are there appropriate mechanisms, such as filters or facets to refine the search results",
+    description:
+        "For instance, lists of best sellers, compiled trends, link news related to the products and services, etc.",
+    group: "Information Search",
+    slug: "h_3_1",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_3_2 = {
+    title: "Is there an integration of the store's products with Google Shopping?",
+    description:
+        "The platform can use videos, images, audio and animations. These can involve long download times, thus it is necessary to strike a balance and optimize their use.",
+    group: "Information Search",
+    slug: "h_3_2",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_4_1 = {
+    title: "Are there product-related ratings and reviews?",
+    description:
+        "if the products have a social content that help the user to make the purchase decision",
+    group: "Purchase Decision Making",
+    slug: "h_4_1",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_4_2 = {
+    title: "Is there a mechanism for the customer to indicate the usefulness of other customers reviews?",
+    description:
+        "It can use a question, such as 'Have you found this useful?' and as an answer 'Yes' or 'No'. This displays how many people have found each review useful, and how many have not.",
+    group: "Purchase Decision Making",
+    slug: "h_4_2",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_4_3 = {
+    title: "Is the shipping available for the X cities?",
+    description:
+        "For instance, it can assist the customer by providing a summary of the most important features - according to customers' needs - and costs of each product within a category.  Alternatively, it can provide a tool to add products to a comparative table.",
+    group: "Purchase Decision Making",
+    slug: "h_4_3",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_5_1 = {
+    title: "If registration is required, is the process short and simple and does it demand only essential information",
+    description:
+        "An example of common logical steps would be 'Shipping address and payment', 'Shipping and gift options' (which include options like gift wrapping or adding a message), 'Payment', 'Order Summary' and 'Order Confirmation'.",
+    group: "Transaction",
+    slug: "h_5_1",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_5_2 = {
+    title: "Are there enough alternatives for the delivery of the order? ",
+    description:
+        "If the customers consider that the information required by a field is  not mandatory the chance of them falsifying data to speed themselves  through the process increases. if when registering the address, there is an integration with Google Maps to generate a graphical interface for positioning the delivery location. If there is any 'connect with' buttons to shortcut the login process.",
+    group: "Transaction",
+    slug: "h_5_2",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_5_3 = {
+    title: "Does the platform show security logos?",
+    description:
+        "The customer should be able to choose the company they prefer, such as USPS, FedEx, UPS, DHS, etc. and consequently manage the speed of the delivery. Check if there is the possibility of collecting the product in the store",
+    group: "Transaction",
+    slug: "h_5_3",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_5_4 = {
+    title: "The credit card number is easy to insert with the appropriate keyboard",
+    description:
+        "Check if the numeric keypad appears correctly. It could even be a credit card scan.",
+    group: "Transaction",
+    slug: "h_5_4",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_5_5 = {
+    title: "Digital Payment",
+    description:
+        "There is an integration with payment wallets like Google Pay and similar options",
+    group: "Transaction",
+    slug: "h_5_5",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+
+const h_6_1 = {
+    title: "Does the platform have a shopping cart that is accessible even without registration?",
+    description:
+        "It must contain everything selected by the customer and the content should be accessible at anytime",
+    group: "Choice",
+    slug: "h_6_1",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_7_1 = {
+    title: "If personal information is required by the platform, does it have the Privacy Policy available?",
+    description:
+        "It should include all possible uses of their personal information. The footer is the standard location to link this information. It has to be easily understandable by the customers.",
+    group: "Trust Building",
+    slug: "h_7_1",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_7_2 = {
+    title: "Is contact information visible during the purchase process?",
+    description:
+        "If there is any suport channel during the purchase (teleohone, chatbot, email form, etc.)",
+    group: "Trust Building",
+    slug: "h_7_2",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_7_3 = {
+    title: "Does the platform has a FAQ section that covers common customer questions?",
+    description:
+        "It has to cover the most common questions detected by the customer service. For  example, it can answer questions concerning the return policy. The information included has to be easily understandable and useful.",
+    group: "Trust Building",
+    slug: "h_7_3",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+
+const h_8_1 = {
+    title: "Is there a chatbot?",
+    description: "If the main support for the customer is a chatbot interface",
+    group: "Support",
+    slug: "h_8_1",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_8_2 = {
+    title: "Does chatbot start with natural language or pre-determined questions?",
+    description:
+        "Does the conversation start with free text, or just a list of predefined options?",
+    group: "Support",
+    slug: "h_8_2",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_8_3 = {
+    title: "Is it possible to have a voice conversation?",
+    description: "It can be a recorded audio message or even a phone call.",
+    group: "Support",
+    slug: "h_8_3",
+    type: "scale",
+    choice: ["a", "b", "c"],
+};
+const h_8_4 = {
+    title: "Where is the chatbot located?",
+    description:
+        "Does chatbot work on the platform itself or on a third party system like Whatsapp?",
+    group: "Support",
+    slug: "h_8_4",
+    type: "choice",
+    choice: [
+        "A - On the platform itself",
+        "B - Third party solution",
+        "C - No chatbot",
+    ],
+};
+
+export const arr_heuristicas = [
+    h_1_1,
+    h_1_2,
+    h_1_3,
+    h_2_1,
+    h_2_2,
+    h_3_1,
+    h_3_2,
+    h_4_1,
+    h_4_2,
+    h_4_3,
+    h_5_1,
+    h_5_2,
+    h_5_3,
+    h_5_4,
+    h_5_5,
+    h_6_1,
+    h_7_1,
+    h_7_2,
+    h_7_3,
+    h_8_1,
+    h_8_2,
+    h_8_3,
+    h_8_4,
+];
+
+/**
+ * Jornadas
+ * ------------------
+ *
+ */
+
+const desktop = {
+    title: "Desktop",
+    slug: "desktop",
+    players: [1, 2, 3, 4],
+    heuristics: ["h_1_1", "h_1_2", "h_1_3", "h_2_1", "h_2_2"],
+};
+const mobile = {
+    title: "Mobile",
+    slug: "mobile",
+    players: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    heuristics: [
+        "h_1_1",
+        "h_1_2",
+        "h_1_3",
+        "h_2_1",
+        "h_2_2",
+        "h_3_1",
+        "h_3_2",
+        "h_4_1",
+        "h_4_2",
+        "h_4_3",
+        "h_5_1",
+        "h_5_2",
+        "h_5_3",
+        "h_5_4",
+        "h_5_5",
+        "h_6_1",
+        "h_7_1",
+        "h_7_2",
+        "h_7_3",
+        "h_8_1",
+        "h_8_2",
+        "h_8_3",
+        "h_8_4",
+    ],
+};
+
+export const arr_jornadas = [mobile];
