@@ -357,10 +357,31 @@ function evaluation() {
             storage.get("isFirstLoad") === "false"
         ) {
             console.log("SALVANDO", localActivePlayer);
+
+            let _allPlayers = [...allPlayers];
+            let _players = [...players];
+
+            _allPlayers[
+                _allPlayers.findIndex(
+                    (player) => player._id === localActivePlayer._id
+                )
+            ] = localActivePlayer;
+            _players[
+                _players.findIndex(
+                    (player) => player._id === localActivePlayer._id
+                )
+            ] = localActivePlayer;
+
+            setAllPlayers(_allPlayers);
+            setPlayers(_players);
+
             let _localActivePlayer = { ...localActivePlayer };
             delete _localActivePlayer._id;
 
             // updadePlayer(_localActivePlayer);
+            // const debSave = debounce(() => {}, 1);
+
+            // debSave();
         }
     }, [localActivePlayer]);
 
