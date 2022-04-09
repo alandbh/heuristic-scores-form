@@ -123,7 +123,7 @@ function HeuristicNode({
     // }, 500);
 
     const handleChangeNote = (ev) => {
-        console.log("debou3", ev.target.value);
+        // console.log("debou3", ev.target.value);
         setHasChanged(true);
         setValues({ ...values, note: ev.target.value });
         storage.set("isFirstLoad", "false");
