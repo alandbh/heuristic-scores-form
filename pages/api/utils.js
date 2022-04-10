@@ -52,9 +52,7 @@ export function isObject(object) {
 
 export async function updadePlayer(playerObj) {
     const response = await fetch(
-        `http://localhost:3000/api/changedata?player=${encodeURI(
-            playerObj.name
-        )}`,
+        `/api/changedata?player=${encodeURI(playerObj.name)}`,
         {
             method: "POST",
             body: JSON.stringify(playerObj),

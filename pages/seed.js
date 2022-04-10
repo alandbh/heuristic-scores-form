@@ -62,32 +62,26 @@ async function addJourneyHandler() {
 
 async function addHeuristicsHandler() {
     arr_heuristicas.forEach(async (heuristic) => {
-        const response = await fetch(
-            "http://localhost:3000/api/addHeuristics",
-            {
-                method: "POST",
-                body: JSON.stringify(heuristic),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        );
+        const response = await fetch("/api/addHeuristics", {
+            method: "POST",
+            body: JSON.stringify(heuristic),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         const data = await response.json();
         console.log(data);
     });
 }
 
 async function handlerChange(query) {
-    const response = await fetch(
-        `http://localhost:3000/api/changedata?player=${encodeURI(query)}`,
-        {
-            method: "POST",
-            body: JSON.stringify(playerChange),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
+    const response = await fetch(`/api/changedata?player=${encodeURI(query)}`, {
+        method: "POST",
+        body: JSON.stringify(playerChange),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
     //?player=Casas%20Bahia
 }
