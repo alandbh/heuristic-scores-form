@@ -809,7 +809,9 @@ function evaluation() {
                                 activeJourney={activeJourney}
                                 heuristics={heuristics}
                             ></TotalScores>
-                            <pre>{JSON.stringify(localActivePlayer)}</pre>
+                            <pre className="invisible">
+                                {JSON.stringify(localActivePlayer)}
+                            </pre>
                             <Scroll to="mainheader" smooth={true}>
                                 Scroll To Top
                             </Scroll>
