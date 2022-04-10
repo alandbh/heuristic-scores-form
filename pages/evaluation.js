@@ -16,6 +16,7 @@ import PlayerSelect from "../components/Playerselect/Playerselect";
 import JourneySelect from "../components/Journeyselect/Journeyselect";
 import Header from "../components/Header/Header";
 import HeuristicNode from "../components/HeuristicNode/HeuristicNode";
+import { Link as Scroll } from "react-scroll";
 
 import React from "react";
 import debounce from "lodash.debounce";
@@ -736,6 +737,40 @@ function evaluation() {
                         )}
                     </div>
                     <div className="col-start-9 col-end-12">
+                        <aside>
+                            <h1>Categories</h1>
+                            <nav>
+                                <ul>
+                                    {activePlayer !== null ? (
+                                        groups[activeJourney.slug].map(
+                                            (group, index) => {
+                                                return (
+                                                    <li>
+                                                        <Scroll
+                                                            activeClass="active"
+                                                            to={`group_${
+                                                                index + 1
+                                                            }`}
+                                                            spy={true}
+                                                            smooth={true}
+                                                        >
+                                                            {`${index + 1}. ${
+                                                                group.name
+                                                            }`}
+                                                        </Scroll>
+                                                    </li>
+                                                );
+                                            }
+                                        )
+                                    ) : (
+                                        <div>wait</div>
+                                    )}
+                                    <Scroll to="mainheader" smooth={true}>
+                                        Scroll To Top
+                                    </Scroll>
+                                </ul>
+                            </nav>
+                        </aside>
                         coluna 2<pre>{JSON.stringify(localActivePlayer)}</pre>
                     </div>
                 </main>

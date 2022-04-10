@@ -50,7 +50,10 @@ function GroupSectionheader({ group, activePlayer, index, activeJourney }) {
     };
 
     return (
-        <div className={`grid gap-5 grid-cols-6 ${styles.container}`}>
+        <div
+            id={`group_${index + 1}`}
+            className={`grid gap-5 grid-cols-6 ${styles.container}`}
+        >
             <h1
                 className={styles.sectionTitle + " " + "col-start-1 col-span-4"}
             >

@@ -13,7 +13,7 @@ function Header({ children, className }) {
     // console.log(children);
 
     return (
-        <header className={styles.headerWrapper}>
+        <header id="mainheader" className={styles.headerWrapper}>
             <div className={styles.logo}>
                 <Link href="/">
                     <a>
