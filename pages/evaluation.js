@@ -329,7 +329,7 @@ function evaluation() {
             setActivePlayer(_localPlayer);
             // setActivePlayer(localActivePlayer);
         }
-    }, 600);
+    }, 1);
 
     function setHeuristicScore(hSlug, values) {
         // console.log("SETANDO SCORE", hSlug, values);
