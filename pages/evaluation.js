@@ -23,8 +23,7 @@ import debounce from "lodash.debounce";
 import GroupSectionheader from "../components/GroupSectionheader";
 import Sectionheader from "../components/Sectionheader";
 import CommentBox from "../components/CommentBox";
-import { urlObjectKeys } from "next/dist/shared/lib/utils";
-
+import TotalScores from "../components/TotalScores";
 let count = 0;
 
 setInterval(() => {
@@ -93,6 +92,27 @@ function evaluation() {
         "localActivePlayer",
         null
     );
+
+    const [scrollY, setScrollY] = useState(0);
+
+    function logit() {
+        if (typeof window !== "undefined") {
+            setScrollY(window.pageYOffset);
+        }
+    }
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            function watchScroll() {
+                window.addEventListener("scroll", logit);
+            }
+            watchScroll();
+            // Remove listener (like componentWillUnmount)
+            return () => {
+                window.removeEventListener("scroll", logit);
+            };
+        }
+    }, []);
 
     // const [isFirstLoad, setisFirstLoad] = useLocalStorage("isFirstLoad", true);
 
@@ -598,7 +618,7 @@ function evaluation() {
                 ) : (
                     <div>Espera</div>
                 )}
-                <main className="grid gap-5 md:grid-cols-12 grid-cols-1">
+                <main className="grid gap-9 md:grid-cols-12 grid-cols-1">
                     <div className="col-start-3 col-span-6">
                         {activePlayer !== null ? (
                             groups[activeJourney.slug].map((group, index) => {
@@ -606,6 +626,7 @@ function evaluation() {
                                     <section
                                         className={styles.sectionContainer}
                                         key={index}
+                                        id={`group_${index + 1}`}
                                     >
                                         <GroupSectionheader
                                             index={index}
@@ -674,7 +695,10 @@ function evaluation() {
                         {activePlayer &&
                         activePlayer !== null &&
                         activePlayer.hasOwnProperty("findings") ? (
-                            <section className={styles.findingsContainer}>
+                            <section
+                                id="generalfindings"
+                                className={styles.findingsContainer}
+                            >
                                 <Sectionheader text="General Findings" />
 
                                 <div className={styles.sectionContent}>
@@ -736,8 +760,17 @@ function evaluation() {
                             <div>Wait...</div>
                         )}
                     </div>
-                    <div className="col-start-9 col-end-12">
-                        <aside>
+                    <div
+                        className="col-start-9 col-end-12"
+                        style={{ position: "relative" }}
+                    >
+                        <aside
+                            className={
+                                scrollY > 250
+                                    ? styles.sideNavigation + " " + styles.fixed
+                                    : styles.sideNavigation
+                            }
+                        >
                             <h1>Categories</h1>
                             <nav>
                                 <ul>
@@ -745,14 +778,17 @@ function evaluation() {
                                         groups[activeJourney.slug].map(
                                             (group, index) => {
                                                 return (
-                                                    <li>
+                                                    <li key={`group_${index}`}>
                                                         <Scroll
-                                                            activeClass="active"
+                                                            activeClass={
+                                                                styles.sidenavActive
+                                                            }
                                                             to={`group_${
                                                                 index + 1
                                                             }`}
                                                             spy={true}
                                                             smooth={true}
+                                                            offset={-50}
                                                         >
                                                             {`${index + 1}. ${
                                                                 group.name
@@ -765,13 +801,23 @@ function evaluation() {
                                     ) : (
                                         <div>wait</div>
                                     )}
-                                    <Scroll to="mainheader" smooth={true}>
-                                        Scroll To Top
-                                    </Scroll>
                                 </ul>
+                                <hr></hr>
+                                <Scroll to="generalfindings" smooth={true}>
+                                    General Findings
+                                </Scroll>
                             </nav>
+                            <h1 style={{ marginTop: "1rem" }}>Total Scores</h1>
+                            <TotalScores
+                                activePlayer={activePlayer}
+                                activeJourney={activeJourney}
+                                heuristics={heuristics}
+                            ></TotalScores>
+                            <pre>{JSON.stringify(localActivePlayer)}</pre>
+                            <Scroll to="mainheader" smooth={true}>
+                                Scroll To Top
+                            </Scroll>
                         </aside>
-                        coluna 2<pre>{JSON.stringify(localActivePlayer)}</pre>
                     </div>
                 </main>
             </>

@@ -26,3 +26,44 @@
         margin-left: 10px;
     }
 }
+
+.sideNavigation {
+    margin-top: calc(60px + 7rem);
+
+    hr {
+        margin: 1rem 0;
+    }
+    
+    &.fixed {
+        position: sticky;
+        margin-top: 0;
+        top: 1rem;
+
+    }
+    h1 {
+        font-weight: 400;
+        text-transform: uppercase;
+        color: $grey;
+        font-size: .8rem;
+        padding-bottom: .7rem;
+        border-bottom: 1px solid $lightgrey;
+    }
+
+    nav {
+        margin-top: 1rem;
+
+        a {
+            color: $blue;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: calc(.3rem - 2px);
+            border-bottom: 2px solid transparent;
+            font-size: .7rem;
+            cursor: pointer;
+
+            &.sidenavActive {
+                border-bottom: 2px solid $blue;
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@
     width: max-content;
     height: 65px;
     margin-left: 2rem;
+    z-index: 1;
     .wrapper {
         display: flex;
         align-items: flex-start;
@@ -60,14 +61,17 @@
         }
 
         li {
-            border-bottom: 1px solid #dbdbdb;
-
+            border-bottom: 1px solid #f1f1f1;
+            font-size: .8rem;
+            color: $grey;
+            
             &:last-child {
                 border-bottom: none;
             }
-
+            
             button {
-                line-height: 2.4rem;
+                // font-weight: bold;
+                line-height: 2rem;
                 display: block;
                 width: 100%;
                 text-align: left;

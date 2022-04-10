@@ -1,0 +1,86 @@
+@import "../../styles/components.scss";
+
+
+.container {
+    font-weight: bold;
+    margin-top: 1rem;
+
+    div {
+        text-align: center;
+        display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+
+    h2 {
+        margin-bottom: .7rem;
+    }
+
+    span {
+        display: block;
+    }
+
+    .bigNumber {
+        font-size: 2rem;
+    }
+}
+
+.percent {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    // background: pink;
+    z-index: 1;
+
+    h2 {
+        color: #aaa;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        font-size: 0.72rem;
+        font-weight: bold;
+        text-align: center;
+        transform: translateY(-50%);
+        transition: all 0.3s;
+    }
+
+    svg {
+        width: 80px;
+        height: 80px;
+        z-index: 2;
+        transform: rotate(-90deg);
+
+        circle {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: lightgray;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transform: translate(8px, 8px);
+            transition: all 0.5s ease;
+
+            &:nth-child(2) {
+                stroke: $lightblue;
+                // We can specify the size of each dash in svg path.
+                // The whole circle perimeter is 440 (2*Pi*r or 2*3.14*70)
+                // So, the half of the circle is 220
+                stroke-dasharray: 213.62px;
+
+                // Defines the location along an SVG path where the dash of a stroke will begin
+                // We can move the dash away by adding some value in dashoffset property
+                // Adding 220px on it, move the dash to the other side of the circle
+                // This is the property we need to change in order to see amount of "filled" chart.
+
+                stroke-dashoffset: 213.62px;
+
+                // Starting at Zero
+                stroke-dasharray: 213.62px;
+
+                // if you want 85%
+                // stroke-dashoffset: calc(175.92px - (175.92px * 85 / 100));
+            }
+        }
+    }
+}
