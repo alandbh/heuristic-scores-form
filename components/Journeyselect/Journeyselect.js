@@ -36,7 +36,7 @@ function JourneySelect({
         <div className={styles.container}>
             <div className={styles.wrapper}>
                 {journeys.length > 0 ? (
-                    <>
+                    <div>
                         <label htmlFor="selectJourney">Select a Journey:</label>
                         <button
                             id="selectJourney"
@@ -53,7 +53,7 @@ function JourneySelect({
                                 <ChevronDown />
                             </span>
                         </button>
-                    </>
+                    </div>
                 ) : (
                     <Wave
                         ammount="7"

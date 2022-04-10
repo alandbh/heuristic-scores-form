@@ -2,12 +2,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import JourneySelect from "../Journeyselect/Journeyselect";
 import PlayerSelect from "../Playerselect/Playerselect";
 import styles from "./Header.module.scss";
 
 // import { Container } from './styles';
 
-function Header({ children, className }) {
+function Header({
+    children,
+    className,
+    activeJourney,
+    journeys,
+    setActiveJourney,
+    setJourneyHasChanged,
+    activePlayer,
+    players,
+    setActivePlayer,
+    setPlayerHasChanged,
+}) {
     const router = useRouter();
 
     // console.log(children);
@@ -49,15 +61,23 @@ function Header({ children, className }) {
                 </Link>
             </nav>
             <div className={styles.colright}>
-                {children &&
-                    children.find(
-                        (child) => child.type.name === "JourneySelect"
-                    )}
+                {journeys && (
+                    <JourneySelect
+                        activeJourney={activeJourney}
+                        journeys={journeys}
+                        setActiveJourney={setActiveJourney}
+                        setJourneyHasChanged={setJourneyHasChanged}
+                    ></JourneySelect>
+                )}
 
-                {children &&
-                    children.find(
-                        (child) => child.type.name === "PlayerSelect"
-                    )}
+                {players && (
+                    <PlayerSelect
+                        activePlayer={activePlayer}
+                        players={players}
+                        setActivePlayer={setActivePlayer}
+                        setPlayerHasChanged={setPlayerHasChanged}
+                    ></PlayerSelect>
+                )}
             </div>
         </header>
     );

@@ -601,20 +601,16 @@ function evaluation() {
                 </Head>
 
                 {players && journeys && journeys.length > 0 ? (
-                    <Header>
-                        <JourneySelect
-                            activeJourney={activeJourney}
-                            journeys={journeys}
-                            setActiveJourney={setActiveJourney}
-                            setJourneyHasChanged={setJourneyHasChanged}
-                        ></JourneySelect>
-                        <PlayerSelect
-                            activePlayer={activePlayer}
-                            players={players}
-                            setActivePlayer={setActivePlayer}
-                            setPlayerHasChanged={setPlayerHasChanged}
-                        ></PlayerSelect>
-                    </Header>
+                    <Header
+                        activeJourney={activeJourney}
+                        journeys={journeys}
+                        setActiveJourney={setActiveJourney}
+                        setJourneyHasChanged={setJourneyHasChanged}
+                        activePlayer={activePlayer}
+                        players={players}
+                        setActivePlayer={setActivePlayer}
+                        setPlayerHasChanged={setPlayerHasChanged}
+                    ></Header>
                 ) : (
                     <div>Espera</div>
                 )}
