@@ -36,7 +36,7 @@ if (typeof window !== "undefined") {
                 localStorage.getItem("localActivePlayer")
             );
             delete _localActivePlayer._id;
-            console.log("STORING IN DATABASE - ", _localActivePlayer);
+            console.log("STORING IN DATABASE...");
             updadePlayer(_localActivePlayer);
         }
     }, 0.5 * 60 * 1000);
@@ -379,7 +379,7 @@ function evaluation() {
             // localStorage.getItem("isFirstLoad") === "false"
             storage.get("isFirstLoad") === "false"
         ) {
-            console.log("SALVANDO", localActivePlayer);
+            console.log("STORING IN LOCALSTORAGE", localActivePlayer);
 
             let _allPlayers = [...allPlayers];
             let _players = [...players];

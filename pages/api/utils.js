@@ -62,7 +62,7 @@ export async function updadePlayer(playerObj) {
         }
     );
 
-    console.log("DATABASE RESPONSE", response);
+    console.log("DATABASE RESPONSE OK: ", response.ok);
 
     //?player=Casas%20Bahia
 }
