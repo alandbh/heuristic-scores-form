@@ -24,7 +24,10 @@ export default function Home() {
                 <div className={styles.grid}>
                     <a href="/evaluation" className={styles.card}>
                         <h2>Evaluation &rarr;</h2>
-                        <p>All evaluation journeys starts here..</p>
+                        <p>
+                            All evaluation journeys starts here. Select a
+                            journey and a player and set the scores.
+                        </p>
                     </a>
 
                     <a href="/dashboard" className={styles.card}>
