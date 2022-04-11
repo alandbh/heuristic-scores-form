@@ -3,32 +3,40 @@
 
 .container {
     width: max-content;
-    height: 65px;
+    height: 75px;
+    // flex: 1;
     margin-left: 2rem;
-    z-index: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 5;
     .wrapper {
         display: flex;
         align-items: flex-start;
         flex-direction: column;
         justify-content: flex-start;
+        height: 100%;
 
         label {
             font-size: small;
             color: $grey;
             margin-left: 0;
             padding-left: 0;
+            text-transform: uppercase;
+    font-size: .6rem;
         }
 
         .imageWrapper {
             display: flex;
             justify-content: flex-start;
+            align-items: center;
         }
     }
     figure {
         // border: 1px solid red;
         display: flex;
         width: 100px;
-        height: 40px;
+        height: 28px;
         // height: 61px;
 
         img {
@@ -50,6 +58,8 @@
         padding: 1rem;
         padding-bottom: 0.3rem;
         visibility: hidden;
+        top: 75px;
+            right: 0;
         opacity: 0;
         transform: translateY(-20px);
 
@@ -57,6 +67,7 @@
             opacity: 1;
             visibility: visible;
             height: auto;
+            
             transform: translateY(0px);
         }
 
