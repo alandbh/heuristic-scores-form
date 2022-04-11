@@ -9,6 +9,11 @@
         font-size: 0.8rem;
         margin-right: 1.5rem;
         color: $grey;
+
+        @media (max-width: 768px) {
+            flex: 0 0 100%;
+            margin-bottom: 1rem;
+        }
     }
 
     textarea {
@@ -32,6 +37,10 @@
 .radioContainer {
     display: flex;
     padding: 0.5rem 0;
+
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+    }
     label {
         display: flex;
         align-items: center;

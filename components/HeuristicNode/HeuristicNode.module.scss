@@ -4,13 +4,24 @@
     display: flex;
     margin-bottom: 2rem;
 
+    &:last-child {
+        margin-bottom: 0;
+    }
+
     .number {
         margin-right: 1rem;
-        width: 40px;
+        // width: 40px;
         display: block;
         flex: 0 0 40px;
         font-weight: bold;
         font-size: 1.2rem;
+
+        @media (max-width: 768px) {
+            flex: 0 0 24px;
+            font-size: .85rem;
+            margin-right: .6rem;
+            padding-top: 2px;
+        }
     }
 
     .container {

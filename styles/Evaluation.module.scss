@@ -15,6 +15,10 @@
         font-weight: bold;
         margin-bottom: 1.5rem;
     }
+
+    @media (max-width: 768px) {
+        padding: 3rem 1rem;
+    }
 }
 .btnAddNote {
     color: $blue;
