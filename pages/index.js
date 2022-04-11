@@ -34,7 +34,7 @@ export default function Home() {
                         <h2>Dashboard &rarr;</h2>
                         <p>
                             Have a plainview of all scores, charts and more.
-                            (comming soon)
+                            (coming soon)
                         </p>
                     </a>
                 </div>
