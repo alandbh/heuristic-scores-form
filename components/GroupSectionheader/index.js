@@ -72,7 +72,7 @@ function GroupSectionheader({ group, activePlayer, index, activeJourney }) {
                         ></circle>
                     </svg>
                     <h2>
-                        {percent.toFixed(2)}
+                        {percent.toFixed(1)}
                         <span>%</span>
                     </h2>
                 </div>
