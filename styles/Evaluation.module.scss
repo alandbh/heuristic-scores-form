@@ -27,6 +27,12 @@
     }
 }
 
+.colRight {
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
 .sideNavigation {
     margin-top: calc(60px + 7rem);
 

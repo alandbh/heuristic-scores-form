@@ -616,8 +616,8 @@ function evaluation() {
                 ) : (
                     <div>Espera</div>
                 )}
-                <main className="grid gap-9 md:grid-cols-12 grid-cols-1">
-                    <div className="col-start-3 col-span-6">
+                <main className="grid md:gap-9 md:grid-cols-12 gap-2 grid-cols-12">
+                    <div className="px-4 md:px-0 col-start-1 col-span-12 md:col-start-3 md:col-span-6">
                         {activePlayer !== null ? (
                             groups[activeJourney.slug].map((group, index) => {
                                 return (
@@ -759,7 +759,9 @@ function evaluation() {
                         )}
                     </div>
                     <div
-                        className="col-start-9 col-end-12"
+                        className={
+                            styles.colRight + " " + "col-start-9 col-end-12"
+                        }
                         style={{ position: "relative" }}
                     >
                         <aside
