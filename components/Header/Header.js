@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -78,6 +79,9 @@ function Header({
                         setPlayerHasChanged={setPlayerHasChanged}
                     ></PlayerSelect>
                 )}
+            </div>
+            <div className={styles.user}>
+                <UserButton />
             </div>
         </header>
     );

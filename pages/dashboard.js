@@ -16,11 +16,13 @@ function dashboard() {
 
             <Header className="active"></Header>
 
-            <main>
-                <div className="wrapper">
-                    <h1>Dashboard</h1>
-                    <Link href="/evaluation">Evaluation</Link> <br />
-                    <Link href="/">Home</Link>
+            <main className="grid gap-9 md:grid-cols-12 grid-cols-1">
+                <div className="col-start-3 col-span-6">
+                    <div className="wrapper">
+                        <h1>Dashboard (comming soon)</h1>
+                        <Link href="/evaluation">Evaluation</Link> <br />
+                        <Link href="/">Home</Link>
+                    </div>
                 </div>
             </main>
         </>
