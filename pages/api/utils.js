@@ -62,7 +62,7 @@ export async function updadePlayer(playerObj) {
         }
     );
 
-    console.log("GRAVOU?", response);
+    console.log("DATABASE RESPONSE", response);
 
     //?player=Casas%20Bahia
 }

@@ -36,10 +36,10 @@ if (typeof window !== "undefined") {
                 localStorage.getItem("localActivePlayer")
             );
             delete _localActivePlayer._id;
-            console.log("TEMPO SALVAR - ", _localActivePlayer);
+            console.log("STORING IN DATABASE - ", _localActivePlayer);
             updadePlayer(_localActivePlayer);
         }
-    }, 1 * 60 * 1000);
+    }, 0.5 * 60 * 1000);
 }
 
 function objIsEmpty(obj) {
