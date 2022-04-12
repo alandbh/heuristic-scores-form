@@ -27,21 +27,21 @@ import CommentBox from "../components/CommentBox";
 import TotalScores from "../components/TotalScores";
 let count = 0;
 
-if (typeof window !== "undefined") {
-    setInterval(() => {
-        count++;
+// if (typeof window !== "undefined") {
+//     setInterval(() => {
+//         count++;
 
-        if (typeof window !== "undefined") {
-            // return;
-            let _localActivePlayer = JSON.parse(
-                localStorage.getItem("localActivePlayer")
-            );
-            delete _localActivePlayer._id;
-            console.log("STORING IN DATABASE...");
-            updadePlayer(_localActivePlayer);
-        }
-    }, 0.5 * 60 * 1000);
-}
+//         if (typeof window !== "undefined") {
+//             // return;
+//             let _localActivePlayer = JSON.parse(
+//                 localStorage.getItem("localActivePlayer")
+//             );
+//             delete _localActivePlayer._id;
+//             console.log("STORING IN DATABASE...");
+//             updadePlayer(_localActivePlayer);
+//         }
+//     }, 0.5 * 60 * 1000);
+// }
 
 function objIsEmpty(obj) {
     return obj.constructor === Object && Object.keys(obj).length === 0;
@@ -383,7 +383,9 @@ function evaluation() {
             let _localActivePlayer = { ...localActivePlayer };
             delete _localActivePlayer._id;
 
-            // updadePlayer(_localActivePlayer);
+            console.log("UPDATING DATABASE ON CHANGING PLAYER");
+
+            updadePlayer(_localActivePlayer);
             // const debSave = debounce(() => {}, 1);
 
             // debSave();
