@@ -48,6 +48,27 @@
             border-radius: 100%;
             cursor: pointer;
         }
+
+        /*
+            Prevent accdentally change values when tapping or clicking
+        */
+
+        pointer-events: none;
+    
+        
+        &::-webkit-slider-thumb {
+            pointer-events:auto;
+        }
+
+        // @media (max-width: 768px) {
+            
+        //     pointer-events: none;
+        
+            
+        //     &::-webkit-slider-thumb {
+        //     pointer-events:auto;
+        //     }
+        // }
     }
 
     &.inputDisable {
