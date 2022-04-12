@@ -11,6 +11,7 @@ import {
     getHeuristicsFromJourney,
     useDidUpdate,
     storage,
+    useScroll,
 } from "./api/utils";
 import PlayerSelect from "../components/Playerselect/Playerselect";
 import JourneySelect from "../components/Journeyselect/Journeyselect";
@@ -95,26 +96,7 @@ function evaluation() {
         null
     );
 
-    const [scrollY, setScrollY] = useState(0);
-
-    function logit() {
-        if (typeof window !== "undefined") {
-            setScrollY(window.pageYOffset);
-        }
-    }
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            function watchScroll() {
-                window.addEventListener("scroll", logit);
-            }
-            watchScroll();
-            // Remove listener (like componentWillUnmount)
-            return () => {
-                window.removeEventListener("scroll", logit);
-            };
-        }
-    }, []);
+    const [scrollY, setScrollY] = useScroll(0);
 
     // const [isFirstLoad, setisFirstLoad] = useLocalStorage("isFirstLoad", true);
 
@@ -614,6 +596,8 @@ function evaluation() {
                     ></link>
                 </Head>
 
+                <a id="top"></a>
+
                 {players && journeys && journeys.length > 0 ? (
                     <Header
                         activeJourney={activeJourney}
@@ -828,7 +812,13 @@ function evaluation() {
                             <pre className="invisible">
                                 {JSON.stringify(localActivePlayer)}
                             </pre>
-                            <Scroll to="mainheader" smooth={true}>
+                            <Scroll
+                                className={
+                                    scrollY < 400 ? "invisible" : "scrollToTop"
+                                }
+                                to="top"
+                                smooth={true}
+                            >
                                 Scroll To Top
                             </Scroll>
                         </aside>

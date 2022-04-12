@@ -2,7 +2,8 @@ import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import { useScroll } from "../../pages/api/utils";
 import JourneySelect from "../Journeyselect/Journeyselect";
 import PlayerSelect from "../Playerselect/Playerselect";
 import styles from "./Header.module.scss";
@@ -23,10 +24,34 @@ function Header({
 }) {
     const router = useRouter();
 
-    // console.log(children);
+    const [scrollY, setScrollY] = useScroll(0);
+
+    // const [headerClass, setHeaderClass] = useState(styles.headerWrapper);
+
+    const headerClasses = {
+        normal: styles.headerWrapper,
+        hidden: styles.headerWrapper + " " + styles.headerHidden,
+        fixed:
+            styles.headerWrapper +
+            " " +
+            styles.headerHidden +
+            " " +
+            styles.fixed,
+    };
+
+    let classNames = headerClasses.normal;
+
+    if (scrollY > 107) {
+        classNames = headerClasses.hidden;
+    }
+
+    if (scrollY > 300) {
+        classNames = headerClasses.fixed;
+        console.log("maior");
+    }
 
     return (
-        <header id="mainheader" className={styles.headerWrapper}>
+        <header id="mainheader" className={classNames}>
             <div className={styles.logo}>
                 <Link href="/">
                     <a>

@@ -34,3 +34,14 @@ pre {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
 }
+
+.scrollToTop {
+    cursor: pointer;
+    padding: 0.3rem 1rem;
+    border: 1px solid grey;
+    text-transform: uppercase;
+    font-size: .5rem;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+}
