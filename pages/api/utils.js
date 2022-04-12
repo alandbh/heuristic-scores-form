@@ -120,3 +120,33 @@ export const storage = {
     get: (item) => getLocalItem(item),
     set: (item, value) => setLocalItem(item, value),
 };
+
+/**
+ *
+ * useScroll
+ */
+
+export function useScroll(inicial = 0) {
+    const [scrollY, setScrollY] = useState(inicial);
+
+    function logit() {
+        if (typeof window !== "undefined") {
+            setScrollY(window.pageYOffset);
+        }
+    }
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            function watchScroll() {
+                window.addEventListener("scroll", logit);
+            }
+            watchScroll();
+            // Remove listener (like componentWillUnmount)
+            return () => {
+                window.removeEventListener("scroll", logit);
+            };
+        }
+    }, []);
+
+    return [scrollY, setScrollY];
+}
