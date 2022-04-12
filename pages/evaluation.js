@@ -826,6 +826,23 @@ function evaluation() {
                         </aside>
                     </div>
                 </main>
+                <footer className={styles.footer}>
+                    <a
+                        href="https://rga.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span className={styles.logo}>
+                            <Image
+                                src="/logo.svg"
+                                alt="Heuristic Collector Logo"
+                                width={100}
+                                height={35}
+                            />
+                        </span>
+                    </a>
+                    <span>v0.01</span>
+                </footer>
             </>
         )
     );
