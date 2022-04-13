@@ -16,7 +16,9 @@ function GroupSectionheader({ group, activePlayer, index, activeJourney }) {
         activeJourney.hasOwnProperty("slug") &&
         group.hasOwnProperty("heuristics")
     ) {
-        const HeuSlugs = group.heuristics.map((heuristic) => heuristic.slug);
+        const HeuSlugs = group.heuristics.map((heuristic) =>
+            heuristic.type === "scale" ? heuristic.slug : false
+        );
         const playerScores = activePlayer.hasOwnProperty("scores")
             ? activePlayer.scores[activeJourney.slug]
             : {};

@@ -13,7 +13,9 @@ function TotalScores({ heuristics, activeJourney, activePlayer }) {
         activePlayer.hasOwnProperty("scores") &&
         activeJourney.hasOwnProperty("slug")
     ) {
-        const HeuSlugs = heuristics.map((heuristic) => heuristic.slug);
+        const HeuSlugs = heuristics.map((heuristic) =>
+            heuristic.type === "scale" ? heuristic.slug : false
+        );
         const playerScores = activePlayer.hasOwnProperty("scores")
             ? activePlayer.scores[activeJourney.slug]
             : {};

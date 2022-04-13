@@ -47,7 +47,7 @@ function Header({
 
     if (scrollY > 300) {
         classNames = headerClasses.fixed;
-        console.log("maior");
+        // console.log("maior");
     }
 
     return (
