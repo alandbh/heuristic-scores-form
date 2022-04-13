@@ -68,11 +68,12 @@
     background: white;
     z-index: 5;
     top: 0;
+    position: sticky;
     // position: relative;
     // top: -30px;
     
     &.headerHidden {
-        transform: translateY(-30px);
+        // transform: translateY(-30px);
         height: 54px;
 
         .logo {
@@ -91,6 +92,7 @@
         }
 
         .colright > div {
+            transition: .3s;
             height: 54px;
 
             figure {
@@ -103,9 +105,9 @@
         }
         
         &.fixed {
-            position: sticky;
             
-            transform: translateY(0px);
+            
+            // transform: translateY(0px);
 
         }
     }
