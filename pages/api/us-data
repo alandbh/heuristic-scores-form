@@ -212,7 +212,7 @@ const h_2_1 = {
     title: "Are the new products or special offers prominently advertised?",
     description:
         "For instance, adding next to them 'New!' or 'On Sale.' Or some direct connection with Black Friday offers",
-    group: "Simulating a desire to purchase",
+    group: "Stimulating a desire to purchase",
     slug: "h_2_1",
     type: "scale",
     choice: ["On the platform", "Third Party", "No chatbot"],
@@ -222,7 +222,7 @@ const h_2_2 = {
     title: "Does the platform provide recommended products?",
     description:
         "This can assist in finding products which might interest the customer, because they are similar to the products in which they expressed an interest. The related products can be inserted at the bottom of the product page,  shopping cart or both. Comparison will be made with logged users and anonymous users to understand if there is even a personalized recommendation.",
-    group: "Simulating a desire to purchase",
+    group: "Stimulating a desire to purchase",
     slug: "h_2_2",
     type: "scale",
     choice: ["a", "b", "c"],
