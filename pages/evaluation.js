@@ -126,7 +126,7 @@ function evaluation() {
         });
 
         // Fetching all Heuristics
-        getData("heuristics").then((data) => {
+        getData("heuristics", "slug").then((data) => {
             setAllHeuristics(data);
             setLoadedData((loadedData.heuristics = true));
         });
@@ -191,6 +191,8 @@ function evaluation() {
                     (heuristic) => heuristic.group
                 );
                 const uniqueGroupNames = [...new Set(allGroupNames)];
+
+                console.log("grup names", allGroupNames);
 
                 journeys.map((journey) => {
                     groups[journey.slug] = [];
