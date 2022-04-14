@@ -86,6 +86,25 @@ async function handlerChange(query) {
     //?player=Casas%20Bahia
 }
 
+async function handlerAddOne(playerSlug) {
+    arr_players.map(async (player) => {
+        if (player.slug === playerSlug) {
+            const response = await fetch(
+                "http://localhost:3000/api/addPlayers",
+                {
+                    method: "POST",
+                    body: JSON.stringify(player),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            const data = await response.json();
+            console.log(data);
+        }
+    });
+}
+
 function seed() {
     arr_jornadas.map((jornada) => {
         arr_players.map((player) => {
@@ -154,6 +173,15 @@ export default function Home() {
                     onClick={() => handlerChange("Arezzo")}
                 >
                     Mudar
+                </button>
+            </div>
+
+            <div>
+                <button
+                    className="bg-blue-500 p-2 px-4 rounded text-white font-bold  my-6"
+                    onClick={() => handlerAddOne("tommy")}
+                >
+                    Adicionar apenas um
                 </button>
             </div>
 

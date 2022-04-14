@@ -154,6 +154,14 @@ const player15 = {
     scores: {},
     findings: [],
 };
+const player16 = {
+    name: "Tommy Hilfiger",
+    slug: "tommy",
+    id: 16,
+    department: "fashion",
+    scores: {},
+    findings: [],
+};
 
 export const arr_players = [
     player1,
@@ -171,6 +179,7 @@ export const arr_players = [
     player13,
     player14,
     player15,
+    player16,
 ];
 
 /**
